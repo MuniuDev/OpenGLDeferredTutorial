@@ -1,6 +1,7 @@
 /*
 * Copyright by Michal Majczak & Krzysztof Taperek, 2016
-* Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+* Licensed under the MIT license:
+* http://www.opensource.org/licenses/mit-license.php
 *
 * Author: Michal Majczak <michal.majczak92@gmail.com>
 */
@@ -10,22 +11,22 @@
 #include <Common.hpp>
 
 class Camera {
-public:
+ public:
   Camera(float fov, float aspect, float clipNear, float clipFar);
 
   void Resize(float fov, float aspect, float clipNear, float clipFar);
   void HandleInput();
 
-  void SetPos(const glm::vec3& pos) { m_pos = pos; }
-  void Move(const glm::vec3& pos) { m_pos += glm::vec3(glm::mat4_cast(m_rot) * glm::vec4(pos,1)); }
-  void Rotate(const glm::quat& rot) { m_rot *=  rot; }
+  void SetPos(const glm::vec3 &pos);
+  void Move(const glm::vec3 &pos);
+  void Rotate(const glm::quat &rot);
 
-  glm::vec3 GetUp() {return glm::vec3(glm::mat4_cast(m_rot) * glm::vec4(0,1,0,1));}
-  glm::vec3 GetRight() {return glm::vec3(glm::mat4_cast(m_rot) * glm::vec4(1,0,0,1));}
-  glm::vec3 GetFront() {return glm::vec3(glm::mat4_cast(m_rot) * glm::vec4(0,0,1,1));}
+  glm::vec3 GetUp();
+  glm::vec3 GetRight();
+  glm::vec3 GetFront();
 
   glm::mat4 GetMVP();
-private:
+ private:
   glm::vec3 m_pos;
   glm::quat m_rot;
   glm::mat4 m_MVP;

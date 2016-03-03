@@ -1,6 +1,7 @@
 /*
 * Copyright by Michal Majczak & Krzysztof Taperek, 2016
-* Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+* Licensed under the MIT license:
+* http://www.opensource.org/licenses/mit-license.php
 *
 * Author: Michal Majczak <michal.majczak92@gmail.com>
 */
@@ -11,13 +12,13 @@
 #include <Renderer.hpp>
 
 class WindowEventHandler {
-public:
+ public:
   WindowEventHandler(std::shared_ptr<RendererContext> renderer);
 
   void PollEvents();
   bool ShouldClose();
 
-private:
+ private:
   std::shared_ptr<RendererContext> m_renderer;
   bool m_shouldClose;
 };

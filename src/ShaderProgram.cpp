@@ -1,6 +1,7 @@
 /*
 * Copyright by Michal Majczak & Krzysztof Taperek, 2016
-* Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+* Licensed under the MIT license:
+* http://www.opensource.org/licenses/mit-license.php
 *
 * Author: Michal Majczak <michal.majczak92@gmail.com>
 */
@@ -11,9 +12,10 @@
 #include <vector>
 
 
-ShaderProgram::ShaderProgram(const std::string& vertexShader, const std::string& fragmentShader) {
+ShaderProgram::ShaderProgram(const std::string &vertexShader,
+                             const std::string &fragmentShader) {
   m_program = glCreateProgram();
-  if(m_program == 0) {
+  if (m_program == 0) {
     LOGE("Creation of shader program failed! Exiting...");
     std::exit(-1);
   }
@@ -35,8 +37,8 @@ void ShaderProgram::CompileProgram() {
   if (linkStatus == 0) {
     int infoLogLength = 0;
     glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &infoLogLength);
-	std::vector<char> errorMessage;
-	errorMessage.resize(infoLogLength + 1);
+    std::vector<char> errorMessage;
+    errorMessage.resize(infoLogLength + 1);
     glGetProgramInfoLog(m_program, infoLogLength, NULL, &errorMessage[0]);
     LOGE("Program linking: {}", std::string(&errorMessage[0]));
     std::exit(-1);
@@ -51,21 +53,22 @@ void ShaderProgram::Validate() {
   if (status == 0) {
     int infoLogLength = 0;
     glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &infoLogLength);
-	std::vector<char> errorMessage;
-	errorMessage.resize(infoLogLength + 1);
-	glGetProgramInfoLog(m_program, infoLogLength, NULL, &errorMessage[0]);
+    std::vector<char> errorMessage;
+    errorMessage.resize(infoLogLength + 1);
+    glGetProgramInfoLog(m_program, infoLogLength, NULL, &errorMessage[0]);
     LOGE("Program validation: {}", std::string(&errorMessage[0]));
     std::exit(-1);
   }
 }
 
-std::string ShaderProgram::LoadShaderCode(const std::string& shaderName) const {
+std::string ShaderProgram::LoadShaderCode(const std::string &shaderName) const {
   std::ifstream ifs(shaderName);
-  std::string source( (std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()) );
+  std::string source((std::istreambuf_iterator<char>(ifs)),
+                     (std::istreambuf_iterator<char>()));
   return source;
 }
 
-void ShaderProgram::LoadShader(int type, const std::string& shaderName) {
+void ShaderProgram::LoadShader(int type, const std::string &shaderName) {
   int shader = glCreateShader(type);
   if (shader == 0) {
     LOGE("Creation of shader failed! Exiting...");
@@ -74,7 +77,7 @@ void ShaderProgram::LoadShader(int type, const std::string& shaderName) {
 
   std::string shaderCode = LoadShaderCode(shaderName);
 
-  const char* code = shaderCode.c_str();
+  const char *code = shaderCode.c_str();
   glShaderSource(shader, 1, &code, NULL);
   glCompileShader(shader);
 
@@ -84,8 +87,8 @@ void ShaderProgram::LoadShader(int type, const std::string& shaderName) {
   if (compileStatus == 0) {
     int infoLogLength = 0;
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
-	std::vector<char> errorMessage;
-	errorMessage.resize(infoLogLength + 1);
+    std::vector<char> errorMessage;
+    errorMessage.resize(infoLogLength + 1);
     glGetShaderInfoLog(shader, infoLogLength, NULL, &errorMessage[0]);
     LOGE("Shader compilation: {}", std::string(&errorMessage[0]));
     std::exit(-1);

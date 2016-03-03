@@ -1,6 +1,7 @@
 /*
 * Copyright by Michal Majczak & Krzysztof Taperek, 2016
-* Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+* Licensed under the MIT license:
+* http://www.opensource.org/licenses/mit-license.php
 *
 * Author: Michal Majczak <michal.majczak92@gmail.com>
 */
@@ -34,6 +35,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <cmath>
+#include <memory>
 
 typedef int32_t int_t;
 typedef int64_t long_t;

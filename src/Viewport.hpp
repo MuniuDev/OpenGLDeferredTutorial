@@ -1,6 +1,7 @@
 /*
 * Copyright by Michal Majczak & Krzysztof Taperek, 2016
-* Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+* Licensed under the MIT license:
+* http://www.opensource.org/licenses/mit-license.php
 *
 * Author: Michal Majczak <michal.majczak92@gmail.com>
 */
@@ -15,17 +16,17 @@
 #include <Camera.hpp>
 
 class Viewport {
-public:
+ public:
   Viewport(float width, float height);
 
   void Init();
   void Resize(float width, float height);
   void Draw(float dt);
 
-private:
+ private:
   float m_width;
   float m_height;
 
   Camera m_camera;
-  ShaderProgram* m_shader;
+  ShaderProgram *m_shader;
 };

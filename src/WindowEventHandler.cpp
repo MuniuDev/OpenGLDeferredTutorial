@@ -1,23 +1,23 @@
 /*
 * Copyright by Michal Majczak & Krzysztof Taperek, 2016
-* Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+* Licensed under the MIT license:
+* http://www.opensource.org/licenses/mit-license.php
 *
 * Author: Michal Majczak <michal.majczak92@gmail.com>
 */
 
 #include <WindowEventHandler.hpp>
 
-WindowEventHandler::WindowEventHandler(std::shared_ptr<RendererContext> renderer)
-: m_renderer(renderer),
-  m_shouldClose(false)
-{
+WindowEventHandler::WindowEventHandler(
+  std::shared_ptr<RendererContext> renderer)
+  : m_renderer(renderer),
+    m_shouldClose(false) {
 }
 
 void WindowEventHandler::PollEvents() {
   SDL_Event event;
-  while( SDL_PollEvent( &event ) != 0 )
-  {
-    switch(event.type) {
+  while (SDL_PollEvent( &event ) != 0) {
+    switch (event.type) {
       case SDL_QUIT:
         m_shouldClose = true;
         break;
@@ -33,4 +33,6 @@ void WindowEventHandler::PollEvents() {
   }
 }
 
-bool WindowEventHandler::ShouldClose() { return m_shouldClose; }
+bool WindowEventHandler::ShouldClose() {
+  return m_shouldClose;
+}

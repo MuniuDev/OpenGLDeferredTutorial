@@ -1,6 +1,7 @@
 /*
 * Copyright by Michal Majczak & Krzysztof Taperek, 2016
-* Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+* Licensed under the MIT license:
+* http://www.opensource.org/licenses/mit-license.php
 *
 * Author: Michal Majczak <michal.majczak92@gmail.com>
 */
@@ -12,17 +13,16 @@
 
 #include <vector>
 
-
 class RendererContext {
-public:
+ public:
   RendererContext(float width, float height, std::string name);
   virtual ~RendererContext();
 
   void InitGL();
   void Tic();
-  void HandleWindowEvent(const SDL_Event& event);
+  void HandleWindowEvent(const SDL_Event &event);
 
-private:
+ private:
   void Clear();
   void Draw();
   void SwapBuffers();
@@ -34,7 +34,7 @@ private:
   Viewport m_viewport;
 
   //SDL
-  SDL_Window* m_window;
+  SDL_Window *m_window;
   SDL_GLContext m_context;
 
 };
