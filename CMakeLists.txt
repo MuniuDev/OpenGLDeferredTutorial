@@ -1,3 +1,8 @@
+# Copyright by Michal Majczak & Krzysztof Taperek, 2016
+# Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+#
+# Author: Michal Majczak <michal.majczak92@gmail.com>
+
 cmake_minimum_required (VERSION 2.8)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR})
 
