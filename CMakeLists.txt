@@ -70,6 +70,13 @@ if( OPENGL_FOUND )
   include_directories( ${OPENGL_INCLUDE_DIR} )
 endif( OPENGL_FOUND )
 
+# Find assimp
+find_package( ASSIMP REQUIRED )
+if( ASSIMP_FOUND )
+  set( LIBRARIES ${LIBRARIES} ${ASSIMP_LIBRARIES} )
+  include_directories( ${ASSIMP_INCLUDE_DIRS} )
+endif( ASSIMP_FOUND )
+
 ##########################################
 ## Add Executable
 ##########################################
