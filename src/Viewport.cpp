@@ -8,6 +8,8 @@
 
 #include <Viewport.hpp>
 
+#include <Mesh.hpp>
+
 Viewport::Viewport(float width, float height)
   : m_width(width),
     m_height(height),
@@ -23,8 +25,12 @@ void Viewport::Resize(float width, float height) {
   m_camera.Resize(45.0f, m_width / m_height, 0.1f, 1000.0f);
 }
 
+Mesh mesh("res/bunny.obj", "");
+
 void Viewport::Init() {
   m_shader = new ShaderProgram("res/test.vsh", "res/test.fsh");
+  mesh.Init();
+  m_camera.Move(glm::vec3(0, 0, 50));
 }
 
 void Viewport::Draw(float dt) {
@@ -35,6 +41,7 @@ void Viewport::Draw(float dt) {
 
   GLuint MatrixID = glGetUniformLocation(m_shader->GetProgramHandle(), "u_mvp");
   glUniformMatrix4fv(MatrixID, 1, GL_FALSE, glm::value_ptr(m_camera.GetMVP()));
+  mesh.Draw(dt);
 
   //unbind shader
   glUseProgram(0);

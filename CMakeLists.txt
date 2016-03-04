@@ -87,7 +87,7 @@ endif( OPENGL_FOUND )
 find_package( ASSIMP REQUIRED )
 if( ASSIMP_FOUND )
   set( LIBRARIES ${LIBRARIES} ${ASSIMP_LIBRARIES} )
-  include_directories( ${ASSIMP_INCLUDE_DIRS} )
+  include_directories( ${ASSIMP_INCLUDE_DIR} )
 endif( ASSIMP_FOUND )
 
 ##########################################
