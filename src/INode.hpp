@@ -14,5 +14,5 @@ class INode {
  public:
   virtual void Init() = 0;
   virtual void Draw(float dt) = 0;
-  virtual glm::mat4 GetTransformation() = 0;
-}
+  virtual glm::mat4 GetTransformation() const = 0;
+};
