@@ -18,8 +18,6 @@ project( ${PROJECT_NAME} )
 ##########################################
 ## EXE info
 ##########################################
-add_definitions( -std=c++14 )
-add_definitions( -O2 )
 
 file(GLOB_RECURSE TARGET_SRC src/*.cpp)
 file(GLOB_RECURSE TARGET_HEADERS src/*.h src/*.hpp )
@@ -30,11 +28,16 @@ include_directories( src/ )
 if( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
     # using clang
 	add_definitions( -Wall  -Wextra )
+	add_definitions( -std=c++14 )
+	add_definitions( -O2 )
 elseif( CMAKE_CXX_COMPILER_ID MATCHES "GNU" )
     # using gcc
 	add_definitions( -Wall  -Wextra )
+	add_definitions( -std=c++14 )
+	add_definitions( -O2 )
 elseif( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
     # using msvc
+	add_definitions( -std=c++11 )
 endif()
 
 # Windows workarounds
