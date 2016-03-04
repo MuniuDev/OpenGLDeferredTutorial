@@ -46,6 +46,7 @@ if( WIN32 )
   set( GLM_ROOT_DIR "${WIN_LIB_DIR}/glm")
   set( ENV{SDL2DIR} "${WIN_LIB_DIR}/SDL2")
   set( ASSIMP_ROOT_DIR "${WIN_LIB_DIR}/assimp")
+  set( GLI_ROOT "${WIN_LIB_DIR}/GLI")
   # libraries needed when linking SDL2 statically
   set( LIBRARIES "version.lib;imm32.lib;winmm.lib;")
 endif( WIN32 )
@@ -89,6 +90,12 @@ if( ASSIMP_FOUND )
   set( LIBRARIES ${LIBRARIES} ${ASSIMP_LIBRARIES} )
   include_directories( ${ASSIMP_INCLUDE_DIR} )
 endif( ASSIMP_FOUND )
+
+# Find GLI
+find_package( GLI REQUIRED )
+if( GLI_FOUND )
+  include_directories( ${GLI_INCLUDE_DIR} )
+endif( GLI_FOUND )
 
 ##########################################
 ## Add Executable
