@@ -33,6 +33,7 @@ if( WIN32 )
   set( CMAKE_PREFIX_PATH "${WIN_LIB_DIR}/glew")
   set( GLM_ROOT_DIR "${WIN_LIB_DIR}/glm")
   set( ENV{SDL2DIR} "${WIN_LIB_DIR}/SDL2")
+  set( ASSIMP_ROOT_DIR "${WIN_LIB_DIR}/assimp")
   # libraries needed when linking SDL2 statically
   set( LIBRARIES "version.lib;imm32.lib;winmm.lib;")
 endif( WIN32 )
