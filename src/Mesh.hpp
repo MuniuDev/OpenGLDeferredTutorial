@@ -22,9 +22,9 @@ class Mesh : public INode {
 
     void Draw(float dt);
 
-    static enum BufferType {
+    static enum {
       VERTEX_BUFFER, TEXCOORD_BUFFER, NORMAL_BUFFER, INDEX_BUFFER, TOTAL_BUFFER_COUNT
-    };
+    } BufferType;
     GLuint vao;
     GLuint vbo[TOTAL_BUFFER_COUNT];
     unsigned int vertexCount;
