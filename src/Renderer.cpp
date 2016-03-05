@@ -109,7 +109,7 @@ void RendererContext::Clear() {
 
 void RendererContext::Draw() {
   //drawing here
-  m_viewport.Draw(0.0);
+  m_viewport.Draw(0.016f);
 }
 
 void RendererContext::SwapBuffers() {

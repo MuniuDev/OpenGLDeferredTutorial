@@ -15,7 +15,7 @@ class Camera {
   Camera(float fov, float aspect, float clipNear, float clipFar);
 
   void Resize(float fov, float aspect, float clipNear, float clipFar);
-  void HandleInput();
+  void HandleInput(float dt);
 
   void SetPos(const glm::vec3 &pos);
   void Move(const glm::vec3 &pos);

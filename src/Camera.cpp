@@ -8,6 +8,9 @@
 
 #include <Camera.hpp>
 
+#include <Input.hpp>
+
+
 Camera::Camera(float fov, float aspect, float clipNear, float clipFar) {
   Resize(fov, aspect, clipNear, clipFar);
 }
@@ -21,8 +24,28 @@ void Camera::Resize(float fov, float aspect, float clipNear, float clipFar) {
                                    m_clipNear, m_clipFar);
 }
 
-void Camera::HandleInput() {
-  //TODO
+void Camera::HandleInput(float dt) {
+  glm::vec3 pos;
+
+  if (g_input.GetKeyState(SDL_SCANCODE_A))
+  { pos = -GetRight(); }
+  else if (g_input.GetKeyState(SDL_SCANCODE_D))
+  { pos = GetRight(); }
+
+  if (g_input.GetKeyState(SDL_SCANCODE_W))
+  { pos = -GetFront(); }
+  else if (g_input.GetKeyState(SDL_SCANCODE_S))
+  { pos = GetFront(); }
+
+  pos *= dt;
+  Move(pos);
+
+  if (g_input.IsLMBPressed()) {
+    glm::vec2 v = g_input.GetMouseDeltaPos();
+    glm::vec3 direction = glm::vec3(v.y, v.x, 0.0f) * dt * 10.0f;
+    glm::quat rot = glm::angleAxis(0.01f, direction);
+    Rotate(rot);
+  }
 }
 
 glm::mat4 Camera::GetMVP() {
@@ -39,7 +62,7 @@ void Camera::Move(const glm::vec3 &pos) {
 }
 
 void Camera::Rotate(const glm::quat &rot) {
-  m_rot *=  rot;
+  m_rot = rot * m_rot;
 }
 
 glm::vec3 Camera::GetUp() {

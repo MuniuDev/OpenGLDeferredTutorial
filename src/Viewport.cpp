@@ -34,6 +34,9 @@ void Viewport::Init() {
 }
 
 void Viewport::Draw(float dt) {
+  //input
+  m_camera.HandleInput(dt);
+
   // set correct viewport
   glViewport(0, 0, m_width, m_height);
   // bind shader

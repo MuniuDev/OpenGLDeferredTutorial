@@ -8,6 +8,8 @@
 
 #include <WindowEventHandler.hpp>
 
+#include <Input.hpp>
+
 WindowEventHandler::WindowEventHandler(
   std::shared_ptr<RendererContext> renderer)
   : m_renderer(renderer),
@@ -24,13 +26,12 @@ void WindowEventHandler::PollEvents() {
       case SDL_WINDOWEVENT:
         m_renderer->HandleWindowEvent(event);
         break;
-      case SDL_KEYDOWN:
-      case SDL_KEYUP:
-        break;
       default:
         break;
     }
   }
+
+  g_input.Update();
 }
 
 bool WindowEventHandler::ShouldClose() {
