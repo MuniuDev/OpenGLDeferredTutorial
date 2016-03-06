@@ -11,7 +11,7 @@
 #include <Input.hpp>
 
 
-static const float MOVE_SPEED = 10.0f;
+static const float MOVE_SPEED = 100.0f;
 static const float ROT_SPEED = 0.5f;
 
 
