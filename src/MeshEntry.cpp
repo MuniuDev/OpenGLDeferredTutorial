@@ -10,9 +10,16 @@
 
 #include <assimp/scene.h>
 
+#include <gli/gli.hpp>
+#include <gli/convert.hpp>
+//#include <gli/texture2d.hpp>
+//#include <gli/convert.hpp>
+//#include <gli/generate_mipmaps.hpp> // compile errors???
+//#include <gli/load.hpp>
+
 #include <vector>
 
-Mesh::MeshEntry::MeshEntry(aiMesh *mesh) {
+Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *material) {
   vbo[VERTEX_BUFFER] = 0;
   vbo[TEXCOORD_BUFFER] = 0;
   vbo[NORMAL_BUFFER] = 0;
@@ -93,12 +100,39 @@ Mesh::MeshEntry::MeshEntry(aiMesh *mesh) {
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 
-  LOGD("Loaded mesh entry with {} vertices and parameters: pos[{}], tex_coord[{}], norm[{}], faces[{}]",
+  LOGD("Loaded mesh entry: {} with {} vertices and parameters: pos[{}], tex_coord[{}], norm[{}], faces[{}]",
+       mesh->mName.C_Str(),
        vertexCount,
        mesh->HasPositions() ? "on" : "off",
        mesh->HasTextureCoords(0) ? "on" : "off",
        mesh->HasNormals() ? "on" : "off",
        mesh->HasFaces() ? "on" : "off");
+
+
+    // Material loading
+
+    aiString texPath;
+    if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS) {
+      std::string fullPath = path + std::string(texPath.C_Str());
+      LOGD("Diffuse texture path: {}", fullPath);
+      gli::texture2d textureSource(gli::load(fullPath));
+      if (textureSource.empty()) {
+        LOGD("Failed to load: {}", fullPath);
+      } else {
+        LOGD("Succeded to load: {}", fullPath);
+      }
+
+      //gli::texture2d textureConverted = gli::convert(textureSource, gli::FORMAT_RGBA32_UINT_PACK32);
+      //textureConverted.data
+
+      glGenTextures(1, &texID);
+      glBindTexture(GL_TEXTURE_2D, texID);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      //glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32UI, 0, 0, textureConverted.dimensions().x, textureConverted.dimensions().y, 0);
+    }
+   
 }
 
 Mesh::MeshEntry::~MeshEntry() {
@@ -123,6 +157,8 @@ Mesh::MeshEntry::~MeshEntry() {
 
 void Mesh::MeshEntry::Draw(float dt) {
   glBindVertexArray(vao);
+  glBindTexture(GL_TEXTURE_2D, texID);
   glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, NULL);
+  glBindTexture(GL_TEXTURE_2D, 0);
   glBindVertexArray(0);
 }

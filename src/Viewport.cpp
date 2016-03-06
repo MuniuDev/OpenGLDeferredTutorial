@@ -25,7 +25,11 @@ void Viewport::Resize(float width, float height) {
   m_camera.Resize(45.0f, m_width / m_height, 0.1f, 1000.0f);
 }
 
+#ifdef __WIN32__
+Mesh mesh("res\\model-tank\\", "tank.fbx");
+#else
 Mesh mesh("res/model-tank/tank.fbx", "");
+#endif
 
 void Viewport::Init() {
   m_shader = new ShaderProgram("res/test.vsh", "res/test.fsh");

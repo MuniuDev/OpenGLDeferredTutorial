@@ -13,9 +13,10 @@
 #include <assimp/postprocess.h>
 #include <assimp/cimport.h>
 
-Mesh::Mesh(const std::string &modelFileName,
-           const std::string &materialFileName)
-  : m_modelFileName(modelFileName) {
+Mesh::Mesh(const std::string &path,
+           const std::string &fileName)
+  : m_path(path)
+  , m_fileName(fileName) {
 
 }
 
@@ -23,17 +24,17 @@ void Mesh::Init() {
   m_meshEntries.clear();
 
   Assimp::Importer importer;
-  const aiScene *scene = importer.ReadFile(m_modelFileName,
+  const aiScene *scene = importer.ReadFile(m_path+m_fileName,
                          aiProcessPreset_TargetRealtime_Fast);
 
   if (!scene) {
-    LOGE("Couldn't load model {} - Error Importing Asset", m_modelFileName);
+    LOGE("Couldn't load model {} - Error Importing Asset", m_path + m_fileName);
     return;
   }
 
-  LOGD("Loading model {} sucessfull.", m_modelFileName);
+  LOGD("Loading model {} sucessfull.", m_path + m_fileName);
   for (int i = 0; i < scene->mNumMeshes; ++i) {
-    m_meshEntries.push_back(std::make_unique<MeshEntry>(scene->mMeshes[i]));
+    m_meshEntries.push_back(std::make_unique<MeshEntry>(m_path, scene->mMeshes[i], scene->mMaterials[i]));
   }
 }
 
