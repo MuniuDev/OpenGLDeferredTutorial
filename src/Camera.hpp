@@ -18,7 +18,7 @@ class Camera {
   void HandleInput(float dt);
 
   void SetPos(const glm::vec3 &pos);
-  void Move(const glm::vec3 &pos);
+  void Move(const glm::vec3 &dir);
   void Rotate(const glm::quat &rot);
 
   glm::vec3 GetUp();
