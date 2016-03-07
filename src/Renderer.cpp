@@ -81,10 +81,7 @@ void RendererContext::InitGL() {
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
 
-  // Setup basic vertex array
-  GLuint VertexArrayID;
-  glGenVertexArrays(1, &VertexArrayID);
-  glBindVertexArray(VertexArrayID);
+  glEnable(GL_DEPTH_TEST);
 
   // init viewports
   m_viewport.Init();

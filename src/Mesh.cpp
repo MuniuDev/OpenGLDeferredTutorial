@@ -24,7 +24,7 @@ void Mesh::Init() {
   m_meshEntries.clear();
 
   Assimp::Importer importer;
-  const aiScene *scene = importer.ReadFile(m_path+m_fileName,
+  const aiScene *scene = importer.ReadFile(m_path + m_fileName,
                          aiProcessPreset_TargetRealtime_Fast);
 
   if (!scene) {

@@ -28,11 +28,11 @@ void Viewport::Resize(float width, float height) {
 #ifdef __WIN32__
 Mesh mesh("res\\model-tank\\", "tank.fbx");
 #else
-Mesh mesh("res/model-tank/tank.fbx", "");
+Mesh mesh("res/model-tank/", "tank.fbx");
 #endif
 
 void Viewport::Init() {
-  m_shader = new ShaderProgram("res/test.vsh", "res/test.fsh");
+  m_shader = new ShaderProgram("res/forward.vsh", "res/forward.fsh");
   mesh.Init();
   m_camera.Move(glm::vec3(0, 0, 50));
 }

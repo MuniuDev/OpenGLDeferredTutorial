@@ -11,13 +11,10 @@
 #include <assimp/scene.h>
 
 #include <gli/gli.hpp>
-#include <gli/convert.hpp>
-//#include <gli/texture2d.hpp>
-//#include <gli/convert.hpp>
-//#include <gli/generate_mipmaps.hpp> // compile errors???
-//#include <gli/load.hpp>
 
 #include <vector>
+
+GLuint create_texture(char const *Filename);
 
 Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *material) {
   vbo[VERTEX_BUFFER] = 0;
@@ -109,30 +106,19 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
        mesh->HasFaces() ? "on" : "off");
 
 
-    // Material loading
+  // Material loading
 
-    aiString texPath;
-    if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS) {
-      std::string fullPath = path + std::string(texPath.C_Str());
-      LOGD("Diffuse texture path: {}", fullPath);
-      gli::texture2d textureSource(gli::load(fullPath));
-      if (textureSource.empty()) {
-        LOGD("Failed to load: {}", fullPath);
-      } else {
-        LOGD("Succeded to load: {}", fullPath);
-      }
-
-      //gli::texture2d textureConverted = gli::convert(textureSource, gli::FORMAT_RGBA32_UINT_PACK32);
-      //textureConverted.data
-
-      glGenTextures(1, &texID);
-      glBindTexture(GL_TEXTURE_2D, texID);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      //glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32UI, 0, 0, textureConverted.dimensions().x, textureConverted.dimensions().y, 0);
+  aiString texPath;
+  if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS) {
+    std::string fullPath = path + std::string(texPath.C_Str());
+    texID = create_texture(fullPath.c_str());
+    if (!texID) {
+      LOGE("Failed to load: {}", fullPath);
+    } else {
+      LOGD("Succeded to load: {}", fullPath);
     }
-   
+  }
+
 }
 
 Mesh::MeshEntry::~MeshEntry() {
@@ -161,4 +147,70 @@ void Mesh::MeshEntry::Draw(float dt) {
   glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, NULL);
   glBindTexture(GL_TEXTURE_2D, 0);
   glBindVertexArray(0);
+}
+
+GLuint create_texture(char const *Filename) {
+  gli::texture Texture = gli::load(Filename);
+  if (Texture.empty())
+  { return 0; }
+
+  gli::gl GL(gli::gl::PROFILE_GL33);
+  gli::gl::format const Format = GL.translate(Texture.format(), Texture.swizzles());
+  GLenum Target = GL.translate(Texture.target());
+
+  GLuint TextureName = 0;
+  glGenTextures(1, &TextureName);
+  glBindTexture(Target, TextureName);
+  glTexParameteri(Target, GL_TEXTURE_BASE_LEVEL, 0);
+  glTexParameteri(Target, GL_TEXTURE_MAX_LEVEL, static_cast<GLint>(Texture.levels() - 1));
+  glTexParameteri(Target, GL_TEXTURE_SWIZZLE_R, Format.Swizzles[0]);
+  glTexParameteri(Target, GL_TEXTURE_SWIZZLE_G, Format.Swizzles[1]);
+  glTexParameteri(Target, GL_TEXTURE_SWIZZLE_B, Format.Swizzles[2]);
+  glTexParameteri(Target, GL_TEXTURE_SWIZZLE_A, Format.Swizzles[3]);
+  glTexParameteri(Target, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(Target, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(Target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(Target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+  glm::tvec3<GLsizei> const Extent(Texture.extent());
+  GLsizei const FaceTotal = static_cast<GLsizei>(Texture.layers() * Texture.faces());
+
+  if (Texture.target() != gli::TARGET_2D) {
+    LOGE("Failed loading texture");
+    assert(0);
+    return TextureName;
+  }
+
+  glTexStorage2D(Target, static_cast<GLint>(Texture.levels()), Format.Internal, Extent.x, Extent.y);
+
+  for (std::size_t Layer = 0; Layer < Texture.layers(); ++Layer)
+    for (std::size_t Face = 0; Face < Texture.faces(); ++Face)
+      for (std::size_t Level = 0; Level < Texture.levels(); ++Level) {
+        GLsizei const LayerGL = static_cast<GLsizei>(Layer);
+        glm::tvec3<GLsizei> Extent(Texture.extent(Level));
+
+        switch (Texture.target()) {
+          case gli::TARGET_2D:
+            if (gli::is_compressed(Texture.format())) {
+              glCompressedTexSubImage2D(
+                Target, static_cast<GLint>(Level),
+                0, 0,
+                Extent.x,
+                Extent.y,
+                Format.Internal, static_cast<GLsizei>(Texture.size(Level)),
+                Texture.data(Layer, Face, Level));
+            } else {
+              glTexSubImage2D(
+                Target, static_cast<GLint>(Level),
+                0, 0,
+                Extent.x,
+                Extent.y,
+                Format.External, Format.Type,
+                Texture.data(Layer, Face, Level));
+            }
+            break;
+          default: assert(0); break;
+        }
+      }
+  return TextureName;
 }
