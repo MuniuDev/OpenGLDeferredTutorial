@@ -42,7 +42,7 @@ void Mesh::Draw(float dt) {
   for (auto &meshEntry : m_meshEntries) {
     meshEntry->Draw(dt);
   }
-  
+
 }
 
 glm::mat4 Mesh::GetTransformation() const {

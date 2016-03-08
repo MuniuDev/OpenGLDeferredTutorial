@@ -99,7 +99,8 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 
-  LOGD("Loaded mesh entry: {} with {} vertices, {} faces and parameters: pos[{}], tex_coord[{}], norm[{}], faces[{}]",
+  LOGD("Loaded mesh entry: {} with {} vertices, {} faces and parameters: "\
+       "pos[{}], tex_coord[{}], norm[{}], faces[{}]",
        mesh->mName.C_Str(),
        vertexCount,
        mesh->mNumFaces,
@@ -114,7 +115,10 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
   aiString texPath;
   if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS) {
     std::string fullPath = path + std::string(texPath.C_Str());
-    std::replace( fullPath.begin(), fullPath.end(), '\\', '/'); // replace all '\' to '/'
+   
+    // replace all '\' to '/', fix for linux machines
+    std::replace( fullPath.begin(), fullPath.end(), '\\', '/'); 
+    
     texID = create_texture(fullPath.c_str());
     if (!texID) {
       LOGE("Failed to load: {}", fullPath);
@@ -158,7 +162,11 @@ GLuint create_texture(char const *Filename) {
 
   LOGD("SOIL loading: '{}'", Filename);
   int width, height, channels;
-  unsigned char* img = SOIL_load_image(Filename, &width, &height, &channels, SOIL_LOAD_AUTO);
+  unsigned char *img = SOIL_load_image(Filename, 
+                                       &width,
+                                       &height,
+                                       &channels,
+                                       SOIL_LOAD_AUTO);
 
   /* check for an error during the load process */
   if (!img) {
@@ -168,11 +176,12 @@ GLuint create_texture(char const *Filename) {
   LOGD("SOIL loading succesfull. {}, {}, {}", width, height, channels);
 
   // Reverse Y axis
-  std::vector<unsigned char> img_y_rev(width*height*channels, 0);
+  std::vector<unsigned char> img_y_rev(width * height * channels, 0);
   for (int i = 0; i < height; ++i) {
     for (int j = 0; j < width; ++j) {
       for (int k = 0; k < channels; ++k) {
-        img_y_rev[(height - i - 1)*width * 3 + j * 3 + k] = img[i*width * 3 + j * 3 + k];
+        img_y_rev[(height - i - 1)*width * 3 + j * 3 + k] 
+            = img[i * width * 3 + j * 3 + k];
       }
     }
   }
@@ -183,7 +192,8 @@ GLuint create_texture(char const *Filename) {
   glBindTexture(GL_TEXTURE_2D, TextureName);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, &img_y_rev[0]);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
+               GL_RGB, GL_UNSIGNED_BYTE, &img_y_rev[0]);
 
   SOIL_free_image_data(img);
 
