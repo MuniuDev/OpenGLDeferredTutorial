@@ -48,7 +48,8 @@ void Camera::HandleInput(float dt) {
 
   if (g_input.IsLMBPressed()) {
     glm::vec2 v = g_input.GetMouseDeltaPos() * ROT_SPEED * dt;
-    glm::quat rot = glm::angleAxis(-v.x, glm::vec3(0, 1, 0)) * glm::angleAxis(-v.y, GetRight());
+    glm::quat rot = glm::angleAxis(-v.x, glm::vec3(0, 1, 0))
+                    * glm::angleAxis(-v.y, GetRight());
     Rotate(rot);
   }
 }

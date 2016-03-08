@@ -24,7 +24,11 @@ class Mesh : public INode {
     void Draw(float dt);
 
     enum BufferType {
-      VERTEX_BUFFER, TEXCOORD_BUFFER, NORMAL_BUFFER, INDEX_BUFFER, TOTAL_BUFFER_COUNT
+      VERTEX_BUFFER,
+      TEXCOORD_BUFFER,
+      NORMAL_BUFFER,
+      INDEX_BUFFER,
+      TOTAL_BUFFER_COUNT
     };
     GLuint vao;
     GLuint vbo[TOTAL_BUFFER_COUNT];

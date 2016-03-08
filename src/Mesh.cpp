@@ -34,7 +34,9 @@ void Mesh::Init() {
 
   LOGD("Loading model {} sucessfull.", m_path + m_fileName);
   for (int i = 0; i < scene->mNumMeshes; ++i) {
-    m_meshEntries.push_back(std::make_unique<MeshEntry>(m_path, scene->mMeshes[i], scene->mMaterials[i]));
+    m_meshEntries.push_back(std::make_unique<MeshEntry>(m_path,
+                                                        scene->mMeshes[i],
+                                                        scene->mMaterials[i]));
   }
 }
 

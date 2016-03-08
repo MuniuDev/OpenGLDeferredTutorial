@@ -18,7 +18,9 @@
 
 GLuint create_texture(char const *Filename);
 
-Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *material) {
+Mesh::MeshEntry::MeshEntry(const std::string &path,
+                           aiMesh *mesh,
+                           aiMaterial *material) {
   vbo[VERTEX_BUFFER] = 0;
   vbo[TEXCOORD_BUFFER] = 0;
   vbo[NORMAL_BUFFER] = 0;
@@ -39,7 +41,8 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
 
     glGenBuffers(1, &vbo[VERTEX_BUFFER]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[VERTEX_BUFFER]);
-    glBufferData(GL_ARRAY_BUFFER, 3 * mesh->mNumVertices * sizeof(GLfloat), &vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3 * mesh->mNumVertices * sizeof(GLfloat),
+                 &vertices[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(0);
@@ -55,7 +58,8 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
 
     glGenBuffers(1, &vbo[TEXCOORD_BUFFER]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[TEXCOORD_BUFFER]);
-    glBufferData(GL_ARRAY_BUFFER, 2 * mesh->mNumVertices * sizeof(GLfloat), &texCoords[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 2 * mesh->mNumVertices * sizeof(GLfloat),
+                 &texCoords[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(1);
@@ -72,7 +76,8 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
 
     glGenBuffers(1, &vbo[NORMAL_BUFFER]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[NORMAL_BUFFER]);
-    glBufferData(GL_ARRAY_BUFFER, 3 * mesh->mNumVertices * sizeof(GLfloat), &normals[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3 * mesh->mNumVertices * sizeof(GLfloat),
+                 &normals[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(2);
@@ -89,7 +94,8 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
 
     glGenBuffers(1, &vbo[INDEX_BUFFER]);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo[INDEX_BUFFER]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * mesh->mNumFaces * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * mesh->mNumFaces * sizeof(GLuint),
+                 &indices[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(3);
@@ -115,10 +121,10 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
   aiString texPath;
   if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS) {
     std::string fullPath = path + std::string(texPath.C_Str());
-   
+
     // replace all '\' to '/', fix for linux machines
-    std::replace( fullPath.begin(), fullPath.end(), '\\', '/'); 
-    
+    std::replace( fullPath.begin(), fullPath.end(), '\\', '/');
+
     texID = create_texture(fullPath.c_str());
     if (!texID) {
       LOGE("Failed to load: {}", fullPath);
@@ -162,7 +168,7 @@ GLuint create_texture(char const *Filename) {
 
   LOGD("SOIL loading: '{}'", Filename);
   int width, height, channels;
-  unsigned char *img = SOIL_load_image(Filename, 
+  unsigned char *img = SOIL_load_image(Filename,
                                        &width,
                                        &height,
                                        &channels,
@@ -180,7 +186,7 @@ GLuint create_texture(char const *Filename) {
   for (int i = 0; i < height; ++i) {
     for (int j = 0; j < width; ++j) {
       for (int k = 0; k < channels; ++k) {
-        img_y_rev[(height - i - 1)*width * 3 + j * 3 + k] 
+        img_y_rev[(height - i - 1)*width * 3 + j * 3 + k]
             = img[i * width * 3 + j * 3 + k];
       }
     }
