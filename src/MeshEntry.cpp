@@ -13,6 +13,8 @@
 #include <gli/gli.hpp>
 
 #include <vector>
+#include <algorithm>
+#include <string>
 
 GLuint create_texture(char const *Filename);
 
@@ -111,6 +113,7 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
   aiString texPath;
   if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texPath) == AI_SUCCESS) {
     std::string fullPath = path + std::string(texPath.C_Str());
+    std::replace( fullPath.begin(), fullPath.end(), '\\', '/'); // replace all '\' to '/'
     texID = create_texture(fullPath.c_str());
     if (!texID) {
       LOGE("Failed to load: {}", fullPath);
