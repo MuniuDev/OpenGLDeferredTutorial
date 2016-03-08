@@ -37,7 +37,7 @@ elseif( CMAKE_CXX_COMPILER_ID MATCHES "GNU" )
 	add_definitions( -O2 )
 elseif( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
     # using msvc
-	add_definitions( -std=c++11 )
+	#add_definitions( -std=c++11 )
 endif()
 
 # Windows workarounds
@@ -49,7 +49,7 @@ if( WIN32 )
   set( GLM_ROOT_DIR "${WIN_LIB_DIR}/glm")
   set( ENV{SDL2DIR} "${WIN_LIB_DIR}/SDL2")
   set( ASSIMP_ROOT_DIR "${WIN_LIB_DIR}/assimp")
-  set( GLI_ROOT "${WIN_LIB_DIR}/GLI")
+  set( SOIL_ROOT_DIR "${WIN_LIB_DIR}/soil")
   # libraries needed when linking SDL2 statically
   set( LIBRARIES "version.lib;imm32.lib;winmm.lib;")
 endif( WIN32 )
@@ -94,11 +94,12 @@ if( ASSIMP_FOUND )
   include_directories( ${ASSIMP_INCLUDE_DIR} )
 endif( ASSIMP_FOUND )
 
-# Find GLI
-find_package( GLI REQUIRED )
-if( GLI_FOUND )
-  include_directories( ${GLI_INCLUDE_DIR} )
-endif( GLI_FOUND )
+# Find SOIL
+find_package( SOIL REQUIRED )
+if( SOIL_FOUND )
+  set( LIBRARIES ${LIBRARIES} ${SOIL_LIBRARIES} )
+  include_directories( ${SOIL_INCLUDE_DIR} )
+endif( SOIL_FOUND )
 
 ##########################################
 ## Add Executable

@@ -10,7 +10,7 @@
 
 #include <assimp/scene.h>
 
-#include <gli/gli.hpp>
+#include <SOIL.h>
 
 #include <vector>
 #include <algorithm>
@@ -57,7 +57,7 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
     glBindBuffer(GL_ARRAY_BUFFER, vbo[TEXCOORD_BUFFER]);
     glBufferData(GL_ARRAY_BUFFER, 2 * mesh->mNumVertices * sizeof(GLfloat), &texCoords[0], GL_STATIC_DRAW);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(1);
   }
 
@@ -99,9 +99,10 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
 
-  LOGD("Loaded mesh entry: {} with {} vertices and parameters: pos[{}], tex_coord[{}], norm[{}], faces[{}]",
+  LOGD("Loaded mesh entry: {} with {} vertices, {} faces and parameters: pos[{}], tex_coord[{}], norm[{}], faces[{}]",
        mesh->mName.C_Str(),
        vertexCount,
+       mesh->mNumFaces,
        mesh->HasPositions() ? "on" : "off",
        mesh->HasTextureCoords(0) ? "on" : "off",
        mesh->HasNormals() ? "on" : "off",
@@ -121,7 +122,6 @@ Mesh::MeshEntry::MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *ma
       LOGD("Succeded to load: {}", fullPath);
     }
   }
-
 }
 
 Mesh::MeshEntry::~MeshEntry() {
@@ -152,68 +152,40 @@ void Mesh::MeshEntry::Draw(float dt) {
   glBindVertexArray(0);
 }
 
+#include <set>
+
 GLuint create_texture(char const *Filename) {
-  gli::texture Texture = gli::load(Filename);
-  if (Texture.empty())
-  { return 0; }
 
-  gli::gl GL(gli::gl::PROFILE_GL33);
-  gli::gl::format const Format = GL.translate(Texture.format(), Texture.swizzles());
-  GLenum Target = GL.translate(Texture.target());
+  LOGD("SOIL loading: '{}'", Filename);
+  int width, height, channels;
+  unsigned char* img = SOIL_load_image(Filename, &width, &height, &channels, SOIL_LOAD_AUTO);
 
-  GLuint TextureName = 0;
-  glGenTextures(1, &TextureName);
-  glBindTexture(Target, TextureName);
-  glTexParameteri(Target, GL_TEXTURE_BASE_LEVEL, 0);
-  glTexParameteri(Target, GL_TEXTURE_MAX_LEVEL, static_cast<GLint>(Texture.levels() - 1));
-  glTexParameteri(Target, GL_TEXTURE_SWIZZLE_R, Format.Swizzles[0]);
-  glTexParameteri(Target, GL_TEXTURE_SWIZZLE_G, Format.Swizzles[1]);
-  glTexParameteri(Target, GL_TEXTURE_SWIZZLE_B, Format.Swizzles[2]);
-  glTexParameteri(Target, GL_TEXTURE_SWIZZLE_A, Format.Swizzles[3]);
-  glTexParameteri(Target, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(Target, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(Target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(Target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  /* check for an error during the load process */
+  if (!img) {
+    LOGE("SOIL loading error: '{}'", SOIL_last_result());
+    return 0;
+  }
+  LOGD("SOIL loading succesfull. {}, {}, {}", width, height, channels);
 
-  glm::tvec3<GLsizei> const Extent(Texture.extent());
-  GLsizei const FaceTotal = static_cast<GLsizei>(Texture.layers() * Texture.faces());
-
-  if (Texture.target() != gli::TARGET_2D) {
-    LOGE("Failed loading texture");
-    assert(0);
-    return TextureName;
+  // Reverse Y axis
+  std::vector<unsigned char> img_y_rev(width*height*channels, 0);
+  for (int i = 0; i < height; ++i) {
+    for (int j = 0; j < width; ++j) {
+      for (int k = 0; k < channels; ++k) {
+        img_y_rev[(height - i - 1)*width * 3 + j * 3 + k] = img[i*width * 3 + j * 3 + k];
+      }
+    }
   }
 
-  glTexStorage2D(Target, static_cast<GLint>(Texture.levels()), Format.Internal, Extent.x, Extent.y);
+  GLuint TextureName = 0;
+  glEnable(GL_TEXTURE_2D);
+  glGenTextures(1, &TextureName);
+  glBindTexture(GL_TEXTURE_2D, TextureName);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, &img_y_rev[0]);
 
-  for (std::size_t Layer = 0; Layer < Texture.layers(); ++Layer)
-    for (std::size_t Face = 0; Face < Texture.faces(); ++Face)
-      for (std::size_t Level = 0; Level < Texture.levels(); ++Level) {
-        GLsizei const LayerGL = static_cast<GLsizei>(Layer);
-        glm::tvec3<GLsizei> Extent(Texture.extent(Level));
+  SOIL_free_image_data(img);
 
-        switch (Texture.target()) {
-          case gli::TARGET_2D:
-            if (gli::is_compressed(Texture.format())) {
-              glCompressedTexSubImage2D(
-                Target, static_cast<GLint>(Level),
-                0, 0,
-                Extent.x,
-                Extent.y,
-                Format.Internal, static_cast<GLsizei>(Texture.size(Level)),
-                Texture.data(Layer, Face, Level));
-            } else {
-              glTexSubImage2D(
-                Target, static_cast<GLint>(Level),
-                0, 0,
-                Extent.x,
-                Extent.y,
-                Format.External, Format.Type,
-                Texture.data(Layer, Face, Level));
-            }
-            break;
-          default: assert(0); break;
-        }
-      }
   return TextureName;
 }
