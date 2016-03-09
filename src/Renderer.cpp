@@ -101,7 +101,8 @@ void RendererContext::HandleWindowEvent(const SDL_Event &event) {
 
 void RendererContext::Clear() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  // clear to sky color
+  glClearColor(126.0f / 255.0f, 192.0f / 255.0f, 238.0f / 255.0f, 1.0f);
 }
 
 void RendererContext::Draw() {

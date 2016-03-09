@@ -27,14 +27,18 @@ void Viewport::Resize(float width, float height) {
 
 #ifdef __WIN32__
 Mesh mesh("res\\model-tank\\", "tank.fbx");
+Mesh ground("res\\model-ground\\", "ground.fbx");
 #else
 Mesh mesh("res/model-tank/", "tank.fbx");
+Mesh ground("res/model-ground/", "ground.fbx");
 #endif
 
 void Viewport::Init() {
   m_shader = new ShaderProgram("res/forward.vsh", "res/forward.fsh");
   mesh.Init();
-  m_camera.Move(glm::vec3(0, 0, 50));
+  ground.Init();
+  m_camera.SetPos(glm::vec3(-8.04383, 4.87507, -6.82812));
+  m_camera.SetRotate(glm::quat(-0.48016, 0.0973405, 0.854395, 0.173216));
 }
 
 void Viewport::Draw(float dt) {
@@ -49,6 +53,7 @@ void Viewport::Draw(float dt) {
   GLuint MatrixID = glGetUniformLocation(m_shader->GetProgramHandle(), "u_mvp");
   glUniformMatrix4fv(MatrixID, 1, GL_FALSE, glm::value_ptr(m_camera.GetMVP()));
   mesh.Draw(dt);
+  ground.Draw(dt);
 
   //unbind shader
   glUseProgram(0);

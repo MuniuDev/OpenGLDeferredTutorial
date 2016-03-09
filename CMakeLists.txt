@@ -21,6 +21,7 @@ project( ${PROJECT_NAME} )
 
 file(GLOB_RECURSE TARGET_SRC src/*.cpp)
 file(GLOB_RECURSE TARGET_HEADERS src/*.h src/*.hpp )
+file(GLOB_RECURSE TARGET_RESOURCES res/* )
 
 include_directories( src/ )
 
@@ -104,6 +105,10 @@ endif( SOIL_FOUND )
 ##########################################
 ## Add Executable
 ##########################################
+
+add_custom_target(copy-resource-files ALL
+    COMMAND cmake -E copy_directory ${CMAKE_SOURCE_DIR}/res ${CMAKE_BINARY_DIR}/res
+    DEPENDS ${TARGET_NAME})
 
 add_executable(${TARGET_NAME} ${TARGET_SRC} ${TARGET_HEADERS})
 target_link_libraries(${TARGET_NAME} ${LIBRARIES})

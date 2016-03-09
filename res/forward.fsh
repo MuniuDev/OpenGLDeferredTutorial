@@ -8,11 +8,11 @@
 #version 330 core
 out vec4 color;
 
-in vec2 texCoord; 
+in vec2 texCoord;
 uniform sampler2D gSampler;
 
 
 void main()
 {
-    color = texture2D(gSampler, texCoord);
+    color = texture(gSampler, texCoord);
 }

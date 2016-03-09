@@ -187,7 +187,7 @@ GLuint create_texture(char const *Filename) {
     for (int j = 0; j < width; ++j) {
       for (int k = 0; k < channels; ++k) {
         img_y_rev[(height - i - 1)*width * 3 + j * 3 + k]
-            = img[i * width * 3 + j * 3 + k];
+          = img[i * width * 3 + j * 3 + k];
       }
     }
   }
@@ -198,6 +198,8 @@ GLuint create_texture(char const *Filename) {
   glBindTexture(GL_TEXTURE_2D, TextureName);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
                GL_RGB, GL_UNSIGNED_BYTE, &img_y_rev[0]);
 

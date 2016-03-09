@@ -52,6 +52,9 @@ void Camera::HandleInput(float dt) {
                     * glm::angleAxis(-v.y, GetRight());
     Rotate(rot);
   }
+
+  //LOGD("{},{},{}", m_pos.x, m_pos.y, m_pos.z);
+  //LOGD("{},{},{},{}", m_rot.x, m_rot.y, m_rot.z, m_rot.w);
 }
 
 glm::mat4 Camera::GetMVP() {
@@ -73,6 +76,10 @@ void Camera::Move(const glm::vec3 &dir) {
 
 void Camera::Rotate(const glm::quat &rot) {
   m_rot = glm::normalize(rot) * m_rot;
+}
+
+void Camera::SetRotate(const glm::quat &rot) {
+  m_rot = rot;
 }
 
 glm::vec3 Camera::GetUp() {

@@ -20,6 +20,7 @@ class Camera {
   void SetPos(const glm::vec3 &pos);
   void Move(const glm::vec3 &dir);
   void Rotate(const glm::quat &rot);
+  void SetRotate(const glm::quat &rot);
 
   glm::vec3 GetUp();
   glm::vec3 GetRight();
