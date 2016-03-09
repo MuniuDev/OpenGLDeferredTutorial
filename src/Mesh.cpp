@@ -28,7 +28,7 @@ void Mesh::Init() {
                          aiProcessPreset_TargetRealtime_Fast);
 
   if (!scene) {
-    LOGE("Couldn't load model {} - Error Importing Asset", m_path + m_fileName);
+    LOGE("Error Importing Asset: {}",  importer.GetErrorString());
     return;
   }
 
