@@ -48,5 +48,21 @@ void Mesh::Draw(float dt) {
 }
 
 glm::mat4 Mesh::GetTransformation() const {
-  return glm::mat4_cast(m_rot) * glm::translate(glm::mat4(1.0f), m_pos);
+  return  glm::translate(glm::mat4(1.0f), m_pos) * glm::mat4_cast(m_rot);
+}
+
+void Mesh::Move(const glm::vec3 &dir) {
+  m_pos += dir;
+}
+
+void Mesh::Rotate(const glm::quat &rot) {
+  m_rot = glm::normalize(rot) * m_rot;
+}
+
+void Mesh::SetPos(const glm::vec3 &pos) {
+  m_pos = pos;
+}
+
+void Mesh::SetRot(const glm::quat &rot) {
+  m_rot = glm::normalize(rot);
 }

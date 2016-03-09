@@ -37,6 +37,8 @@ void Viewport::Init() {
   m_shader = new ShaderProgram("res/forward.vsh", "res/forward.fsh");
   mesh.Init();
   ground.Init();
+  //mesh.SetPos(glm::vec3(0,10,0));
+  //mesh.SetRot(glm::quat(0.5,1,0,1));
   m_camera.SetPos(glm::vec3(-8.04383, 4.87507, -6.82812));
   m_camera.SetRotate(glm::quat(-0.48016, 0.0973405, 0.854395, 0.173216));
 }
@@ -51,8 +53,14 @@ void Viewport::Draw(float dt) {
   m_shader->BindProgram();
 
   GLuint MatrixID = glGetUniformLocation(m_shader->GetProgramHandle(), "u_mvp");
-  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, glm::value_ptr(m_camera.GetMVP()));
+  glm::mat4 mvp = m_camera.GetMVP();
+
+  glm::mat4 transform = mesh.GetTransformation();
+  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, glm::value_ptr(mvp * transform));
   mesh.Draw(dt);
+
+  transform = ground.GetTransformation();
+  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, glm::value_ptr(mvp * transform));
   ground.Draw(dt);
 
   //unbind shader

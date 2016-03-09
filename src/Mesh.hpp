@@ -16,6 +16,11 @@ class Mesh : public INode {
   void Draw(float dt) override;
   glm::mat4 GetTransformation() const override;
 
+  void SetPos(const glm::vec3 &pos) override;
+  void SetRot(const glm::quat &rot) override;
+  void Move(const glm::vec3 &dir) override;
+  void Rotate(const glm::quat &rot) override;
+
  private:
   struct MeshEntry {
     MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *material);
