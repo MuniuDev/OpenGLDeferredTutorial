@@ -106,9 +106,16 @@ endif( SOIL_FOUND )
 ## Add Executable
 ##########################################
 
-add_custom_target(copy-resource-files ALL
-    COMMAND cmake -E copy_directory ${CMAKE_SOURCE_DIR}/res ${CMAKE_BINARY_DIR}/res
+if( WIN32 )
+  add_custom_target(copy-resource-files ALL
+    COMMAND cmake -E copy_directory ${CMAKE_SOURCE_DIR}/res ${CMAKE_BINARY_DIR}/Release/res
+	COMMAND cmake -E copy_directory ${CMAKE_SOURCE_DIR}/res ${CMAKE_BINARY_DIR}/Debug/res
     DEPENDS ${TARGET_NAME})
+else( WIN32 )
+  add_custom_target(copy-resource-files ALL
+	COMMAND cmake -E copy_directory ${CMAKE_SOURCE_DIR}/res ${CMAKE_BINARY_DIR}/res
+	DEPENDS ${TARGET_NAME})
+endif( WIN32 )
 
 add_executable(${TARGET_NAME} ${TARGET_SRC} ${TARGET_HEADERS})
 target_link_libraries(${TARGET_NAME} ${LIBRARIES})
