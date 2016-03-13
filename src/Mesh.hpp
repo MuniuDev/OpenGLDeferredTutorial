@@ -2,6 +2,8 @@
 
 #include <Common.hpp>
 #include <INode.hpp>
+#include <ShaderProgram.hpp>
+
 
 #include <vector>
 
@@ -14,6 +16,7 @@ class Mesh : public INode {
        const std::string &fileName);
   void Init() override;
   void Draw(float dt) override;
+  void SetShader(std::shared_ptr<ShaderProgram> shader) { m_shader = shader; }
   glm::mat4 GetTransformation() const override;
 
   void SetPos(const glm::vec3 &pos) override;
@@ -35,10 +38,17 @@ class Mesh : public INode {
       INDEX_BUFFER,
       TOTAL_BUFFER_COUNT
     };
+
+    struct Material {
+      float specularIntensity;
+      float specularPower;
+    };
+
     GLuint vao;
     GLuint vbo[TOTAL_BUFFER_COUNT];
     GLuint texID;
     unsigned int vertexCount;
+    Material mtl;
   };
 
   std::vector<std::unique_ptr<MeshEntry>> m_meshEntries;
@@ -47,4 +57,5 @@ class Mesh : public INode {
 
   glm::vec3 m_pos;
   glm::quat m_rot;
+  std::shared_ptr<ShaderProgram> m_shader;
 };

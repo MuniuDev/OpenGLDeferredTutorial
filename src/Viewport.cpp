@@ -34,9 +34,11 @@ Mesh ground("res/model-ground/", "ground.fbx");
 #endif
 
 void Viewport::Init() {
-  m_shader = new ShaderProgram("res/forward.vsh", "res/forward.fsh");
+  m_shader = std::make_shared<ShaderProgram>("res/forward.vsh", "res/forward.fsh");
   mesh.Init();
+  mesh.SetShader(m_shader);
   ground.Init();
+  ground.SetShader(m_shader);
   //mesh.SetPos(glm::vec3(0,10,0));
   //mesh.SetRot(glm::quat(0.5,1,0,1));
   m_camera.SetPos(glm::vec3(-8.04383, 4.87507, -6.82812));
@@ -69,9 +71,6 @@ void Viewport::Draw(float dt) {
   
   m_shader->SetUniform("u_ambientLight.color", glm::vec3(1, 1, 1));
   m_shader->SetUniform("u_ambientLight.intensity", 0.1f);
-  
-  m_shader->SetUniform("u_material.specularIntensity",5.0f);
-  m_shader->SetUniform("u_material.specularPower",10.0f);
 
   m_shader->SetUniform("u_directionalLight.base.color", glm::vec3(1, 1, 1));
   m_shader->SetUniform("u_directionalLight.base.intensity", 0.9f);

@@ -134,6 +134,12 @@ Mesh::MeshEntry::MeshEntry(const std::string &path,
       LOGD("Succeded to load: {}", fullPath);
     }
   }
+
+  // Material params loading
+  material->Get(AI_MATKEY_SHININESS_STRENGTH, mtl.specularIntensity);
+  material->Get(AI_MATKEY_SHININESS, mtl.specularPower);
+
+  LOGD("Specular: {}, {}", mtl.specularIntensity, mtl.specularPower);
 }
 
 Mesh::MeshEntry::~MeshEntry() {

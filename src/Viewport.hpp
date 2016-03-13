@@ -28,5 +28,5 @@ class Viewport {
   float m_height;
 
   Camera m_camera;
-  ShaderProgram *m_shader;
+  std::shared_ptr<ShaderProgram> m_shader;
 };
