@@ -41,6 +41,11 @@ void Viewport::Init() {
   //mesh.SetRot(glm::quat(0.5,1,0,1));
   m_camera.SetPos(glm::vec3(-8.04383, 4.87507, -6.82812));
   m_camera.SetRotate(glm::quat(-0.48016, 0.0973405, 0.854395, 0.173216));
+
+  m_shader->RegisterUniform("u_mvp");
+  m_shader->RegisterUniform("u_transform");
+  m_shader->RegisterUniform("u_ambientLight.color");
+  m_shader->RegisterUniform("u_ambientLight.intensity");
 }
 
 void Viewport::Draw(float dt) {
@@ -51,16 +56,16 @@ void Viewport::Draw(float dt) {
   glViewport(0, 0, m_width, m_height);
   // bind shader
   m_shader->BindProgram();
+  
+  m_shader->SetUniform("u_ambientLight.intensity", 1.0f);
+  m_shader->SetUniform("u_ambientLight.color", glm::vec3(1,1,1));
 
-  GLuint MatrixID = glGetUniformLocation(m_shader->GetProgramHandle(), "u_mvp");
-  glm::mat4 mvp = m_camera.GetMVP();
+  m_shader->SetUniform("u_mvp", m_camera.GetMVP());
 
-  glm::mat4 transform = mesh.GetTransformation();
-  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, glm::value_ptr(mvp * transform));
+  m_shader->SetUniform("u_transform", mesh.GetTransformation());
   mesh.Draw(dt);
 
-  transform = ground.GetTransformation();
-  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, glm::value_ptr(mvp * transform));
+  m_shader->SetUniform("u_transform", ground.GetTransformation());
   ground.Draw(dt);
 
   //unbind shader

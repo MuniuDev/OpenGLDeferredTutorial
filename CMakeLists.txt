@@ -21,7 +21,7 @@ project( ${PROJECT_NAME} )
 
 file(GLOB_RECURSE TARGET_SRC src/*.cpp)
 file(GLOB_RECURSE TARGET_HEADERS src/*.h src/*.hpp )
-file(GLOB_RECURSE TARGET_RESOURCES res/* )
+file(GLOB_RECURSE TARGET_SHADERS res/*.fsh  res/*.vsh)
 
 include_directories( src/ )
 
@@ -117,5 +117,5 @@ else( WIN32 )
 	DEPENDS ${TARGET_NAME})
 endif( WIN32 )
 
-add_executable(${TARGET_NAME} ${TARGET_SRC} ${TARGET_HEADERS})
+add_executable(${TARGET_NAME} ${TARGET_SRC} ${TARGET_HEADERS} ${TARGET_SHADERS})
 target_link_libraries(${TARGET_NAME} ${LIBRARIES})

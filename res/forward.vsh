@@ -10,12 +10,20 @@ layout(location = 0) in vec3 a_vertexPos;
 layout(location = 1) in vec2 a_texCoord;
 layout(location = 2) in vec3 a_normal;
 
-out vec2 texCoord;
+out vec3 v_vertexPos;
+out vec2 v_texCoord;
+out vec3 v_normal;
 
 uniform mat4 u_mvp;
+uniform mat4 u_transform;
 
 void main()
 {
-    gl_Position = u_mvp * vec4(a_vertexPos,1);
-	texCoord = a_texCoord;
+  // pass the varying variables to fsh
+  v_vertexPos = (vec4(a_vertexPos, 0) * u_transform).xyz;
+  v_texCoord = a_texCoord;
+  v_normal = (vec4(a_normal, 0) * u_transform).xyz;
+
+  // calculate postion of the vertex
+  gl_Position = u_mvp * u_transform * vec4(a_vertexPos, 1);
 }

@@ -11,6 +11,7 @@
 #include <Common.hpp>
 
 #include <string>
+#include <map>
 
 // Text for fonts:
 // http://nehe.gamedev.net/tutorial/freetype_fonts_in_opengl/24001/
@@ -26,7 +27,14 @@ class ShaderProgram {
 
   GLuint GetProgramHandle() const;
 
+  void RegisterUniform(const std::string& name);
+  void SetUniform(const std::string& name, int val);
+  void SetUniform(const std::string& name, float val);
+  void SetUniform(const std::string& name, const glm::vec3& val);
+  void SetUniform(const std::string& name, const glm::mat4& val);
+
  private:
   std::string LoadShaderCode(const std::string &shader) const;
+  std::map<std::string, GLuint> m_uniforms;
   GLuint m_program;
 };
