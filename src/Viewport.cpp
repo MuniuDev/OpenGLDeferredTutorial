@@ -68,14 +68,14 @@ void Viewport::Draw(float dt) {
   glViewport(0, 0, m_width, m_height);
   // bind shader
   m_shader->BindProgram();
-  
+
   m_shader->SetUniform("u_ambientLight.color", glm::vec3(1, 1, 1));
   m_shader->SetUniform("u_ambientLight.intensity", 0.1f);
 
   m_shader->SetUniform("u_directionalLight.base.color", glm::vec3(1, 1, 1));
   m_shader->SetUniform("u_directionalLight.base.intensity", 0.9f);
   m_shader->SetUniform("u_directionalLight.direction", glm::normalize(glm::vec3(1, -1, 1)));
-  
+
   m_shader->SetUniform("u_eyePos", m_camera.GetPos());
 
   m_shader->SetUniform("u_mvp", m_camera.GetMVP());

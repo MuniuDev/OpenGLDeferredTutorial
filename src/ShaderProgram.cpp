@@ -102,22 +102,22 @@ GLuint ShaderProgram::GetProgramHandle() const {
   return m_program;
 }
 
-void ShaderProgram::RegisterUniform(const std::string& name) {
+void ShaderProgram::RegisterUniform(const std::string &name) {
   m_uniforms[name] = glGetUniformLocation(m_program, name.c_str());
 }
 
-void ShaderProgram::SetUniform(const std::string& name, int val) {
+void ShaderProgram::SetUniform(const std::string &name, int val) {
   glUniform1i(m_uniforms[name], val);
 }
 
-void ShaderProgram::SetUniform(const std::string& name, float val) {
+void ShaderProgram::SetUniform(const std::string &name, float val) {
   glUniform1f(m_uniforms[name], val);
 }
 
-void ShaderProgram::SetUniform(const std::string& name, const glm::vec3& val) {
+void ShaderProgram::SetUniform(const std::string &name, const glm::vec3 &val) {
   glUniform3f(m_uniforms[name], val.x, val.y, val.z);
 }
 
-void ShaderProgram::SetUniform(const std::string& name, const glm::mat4& val) {
+void ShaderProgram::SetUniform(const std::string &name, const glm::mat4 &val) {
   glUniformMatrix4fv(m_uniforms[name], 1, GL_FALSE, glm::value_ptr(val));
 }
