@@ -27,6 +27,8 @@ class Camera {
   glm::vec3 GetFront();
 
   glm::mat4 GetMVP();
+
+  glm::vec3 GetPos();
  private:
   glm::vec3 m_pos;
   glm::quat m_rot;

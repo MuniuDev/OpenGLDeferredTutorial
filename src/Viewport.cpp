@@ -44,8 +44,18 @@ void Viewport::Init() {
 
   m_shader->RegisterUniform("u_mvp");
   m_shader->RegisterUniform("u_transform");
+
   m_shader->RegisterUniform("u_ambientLight.color");
   m_shader->RegisterUniform("u_ambientLight.intensity");
+
+  m_shader->RegisterUniform("u_eyePos");
+
+  m_shader->RegisterUniform("u_material.specularIntensity");
+  m_shader->RegisterUniform("u_material.specularPower");
+
+  m_shader->RegisterUniform("u_directionalLight.base.color");
+  m_shader->RegisterUniform("u_directionalLight.base.intensity");
+  m_shader->RegisterUniform("u_directionalLight.direction");
 }
 
 void Viewport::Draw(float dt) {
@@ -57,14 +67,22 @@ void Viewport::Draw(float dt) {
   // bind shader
   m_shader->BindProgram();
   
-  m_shader->SetUniform("u_ambientLight.intensity", 1.0f);
-  m_shader->SetUniform("u_ambientLight.color", glm::vec3(1,1,1));
+  m_shader->SetUniform("u_ambientLight.color", glm::vec3(1, 1, 1));
+  m_shader->SetUniform("u_ambientLight.intensity", 0.1f);
+  
+  m_shader->SetUniform("u_material.specularIntensity",5.0f);
+  m_shader->SetUniform("u_material.specularPower",10.0f);
+
+  m_shader->SetUniform("u_directionalLight.base.color", glm::vec3(1, 1, 1));
+  m_shader->SetUniform("u_directionalLight.base.intensity", 0.9f);
+  m_shader->SetUniform("u_directionalLight.direction", glm::normalize(glm::vec3(1, -1, 1)));
+  
+  m_shader->SetUniform("u_eyePos", m_camera.GetPos());
 
   m_shader->SetUniform("u_mvp", m_camera.GetMVP());
 
   m_shader->SetUniform("u_transform", mesh.GetTransformation());
   mesh.Draw(dt);
-
   m_shader->SetUniform("u_transform", ground.GetTransformation());
   ground.Draw(dt);
 

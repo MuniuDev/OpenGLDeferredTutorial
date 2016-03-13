@@ -71,7 +71,7 @@ vec4 calcLight(BaseLight base, vec3 direction, vec3 normal)
 
 vec4 calcDirectionalLight(DirectionalLight directionalLight, vec3 normal)
 {
-	return calcLight(directionalLight.base, -directionalLight.direction, normal);
+	return calcLight(directionalLight.base, directionalLight.direction, normal);
 }
 
 vec4 calcAmbientlLight(BaseLight ambientLight)
@@ -88,7 +88,7 @@ void main()
 		
 	vec3 normal = normalize(v_normal);
 	vec4 light = calcAmbientlLight(u_ambientLight);
-	//light += calcDirectionalLight(u_directionalLight, normal);
+	light += calcDirectionalLight(u_directionalLight, normal);
 
     frag_color = color * light;
 }

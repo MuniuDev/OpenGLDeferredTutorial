@@ -11,7 +11,7 @@
 #include <Input.hpp>
 
 
-static const float MOVE_SPEED = 100.0f;
+static const float MOVE_SPEED = 10.0f;
 static const float ROT_SPEED = 0.5f;
 
 
@@ -92,4 +92,8 @@ glm::vec3 Camera::GetRight() {
 
 glm::vec3 Camera::GetFront() {
   return glm::vec3(m_rot * glm::vec4(0, 0, -1, 1));
+}
+
+glm::vec3 Camera::GetPos() {
+  return m_pos;
 }
