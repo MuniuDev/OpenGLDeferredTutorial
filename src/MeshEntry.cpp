@@ -16,6 +16,8 @@
 #include <algorithm>
 #include <string>
 
+static const int MIPMAP_AMOUNT = 4;
+
 GLuint create_texture(char const *Filename);
 
 Mesh::MeshEntry::MeshEntry(const std::string &path,
@@ -196,12 +198,15 @@ GLuint create_texture(char const *Filename) {
   glEnable(GL_TEXTURE_2D);
   glGenTextures(1, &TextureName);
   glBindTexture(GL_TEXTURE_2D, TextureName);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, MIPMAP_AMOUNT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
                GL_RGB, GL_UNSIGNED_BYTE, &img_y_rev[0]);
+
+  glGenerateMipmap(GL_TEXTURE_2D);
 
   SOIL_free_image_data(img);
 
