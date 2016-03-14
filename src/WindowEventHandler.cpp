@@ -11,7 +11,7 @@
 #include <Input.hpp>
 
 WindowEventHandler::WindowEventHandler(
-  std::shared_ptr<RendererContext> renderer)
+  std::shared_ptr<Context> renderer)
   : m_renderer(renderer),
     m_shouldClose(false) {
 }

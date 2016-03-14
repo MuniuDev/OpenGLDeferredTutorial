@@ -3,38 +3,55 @@
 * Licensed under the MIT license:
 * http://www.opensource.org/licenses/mit-license.php
 *
-* Author: Michal Majczak <michal.majczak92@gmail.com>
+* Author: Krzysztof Taperek <krzysztoftaperek@gmail.com>
 */
 
 #pragma once
 
 #include <Common.hpp>
-#include <Viewport.hpp>
+#include <Scene.hpp>
 
-#include <vector>
 
-class RendererContext {
+enum class RendererType {
+  FORWARD,
+  DEFERRED
+};
+
+class Renderer {
  public:
-  RendererContext(float width, float height, std::string name);
-  virtual ~RendererContext();
+  Renderer(std::shared_ptr<Scene> scene)
+    : m_scene(scene) { }
+  virtual ~Renderer() { }
 
-  void InitGL();
-  void Tic();
-  void HandleWindowEvent(const SDL_Event &event);
+  virtual void InitRenderer() = 0;
+  virtual void RenderScene(float dt) = 0;
 
- private:
-  void Clear();
-  void Draw();
-  void SwapBuffers();
+  RendererType GetType() {
+    return type;
+  }
 
-  float m_width;
-  float m_height;
+ protected:
+  std::shared_ptr<ShaderProgram> m_shader;
+  std::shared_ptr<Scene> m_scene;
 
-  // Viewports
-  Viewport m_viewport;
+  RendererType type;
+};
 
-  //SDL
-  SDL_Window *m_window;
-  SDL_GLContext m_context;
 
+class ForwardRenderer : public Renderer {
+ public:
+  ForwardRenderer(std::shared_ptr<Scene> scene);
+  ~ForwardRenderer();
+
+  void InitRenderer();
+  void RenderScene(float dt);
+};
+
+class DeferredRenderer : public Renderer {
+ public:
+  DeferredRenderer(std::shared_ptr<Scene> scene);
+  ~DeferredRenderer();
+
+  void InitRenderer();
+  void RenderScene(float dt);
 };

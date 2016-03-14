@@ -3,7 +3,7 @@
 * Licensed under the MIT license:
 * http://www.opensource.org/licenses/mit-license.php
 *
-* Author: Michal Majczak <michal.majczak92@gmail.com>
+* Author: Krzysztof Taperek <krzysztoftaperek@gmail.com>
 */
 
 #include <Input.hpp>

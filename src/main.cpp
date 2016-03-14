@@ -7,18 +7,18 @@
 */
 
 #include <Common.hpp>
-#include <Renderer.hpp>
+#include <Context.hpp>
 #include <WindowEventHandler.hpp>
 
 int main(int argc, char *argv[]) {
-  auto renderer = std::make_shared<RendererContext>(800, 600, "OpenGLDemo");
-  auto eventHandler = std::make_shared<WindowEventHandler>(renderer);
+  auto context = std::make_shared<Context>(800, 600, "OpenGLDemo");
+  auto eventHandler = std::make_shared<WindowEventHandler>(context);
 
-  renderer->InitGL();
+  context->InitGL();
   bool running = true;
   while (running) {
     eventHandler->PollEvents();
-    renderer->Tic();
+    context->Tic();
     running = !eventHandler->ShouldClose();
   }
 

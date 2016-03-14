@@ -41,6 +41,9 @@ void Mesh::Init() {
 }
 
 void Mesh::Draw(float dt) {
+
+  m_shader->SetUniform("u_transform", GetTransformation());
+
   for (auto &meshEntry : m_meshEntries) {
     m_shader->SetUniform("u_material.specularIntensity", meshEntry->mtl.specularIntensity);
     m_shader->SetUniform("u_material.specularPower", meshEntry->mtl.specularPower);

@@ -3,12 +3,13 @@
 * Licensed under the MIT license:
 * http://www.opensource.org/licenses/mit-license.php
 *
-* Author: Michal Majczak <michal.majczak92@gmail.com>
+* Author: Krzysztof Taperek <krzysztoftaperek@gmail.com>
 */
 
-#include <Renderer.hpp>
+#include <Context.hpp>
 
-RendererContext::RendererContext(float width, float height, std::string name)
+
+Context::Context(float width, float height, std::string name)
   : m_viewport(width, height),
     m_width(width),
     m_height(height),
@@ -59,7 +60,7 @@ RendererContext::RendererContext(float width, float height, std::string name)
   LOGD("Success initializing graphics context!");
 }
 
-RendererContext::~RendererContext() {
+Context::~Context() {
   //Destroy window
   if (m_window) {
     SDL_DestroyWindow(m_window);
@@ -69,13 +70,13 @@ RendererContext::~RendererContext() {
   SDL_Quit();
 }
 
-void RendererContext::Tic() {
+void Context::Tic() {
   Clear();
   Draw();
   SwapBuffers();
 }
 
-void RendererContext::InitGL() {
+void Context::InitGL() {
   // Basic openGL settings
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
@@ -87,7 +88,7 @@ void RendererContext::InitGL() {
   m_viewport.Init();
 }
 
-void RendererContext::HandleWindowEvent(const SDL_Event &event) {
+void Context::HandleWindowEvent(const SDL_Event &event) {
   switch (event.window.event) {
     case SDL_WINDOWEVENT_RESIZED:
       m_width = event.window.data1;
@@ -99,17 +100,17 @@ void RendererContext::HandleWindowEvent(const SDL_Event &event) {
   }
 }
 
-void RendererContext::Clear() {
+void Context::Clear() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   // clear to sky color
   glClearColor(126.0f / 255.0f, 192.0f / 255.0f, 238.0f / 255.0f, 1.0f);
 }
 
-void RendererContext::Draw() {
+void Context::Draw() {
   //drawing here
   m_viewport.Draw(0.016f);
 }
 
-void RendererContext::SwapBuffers() {
+void Context::SwapBuffers() {
   SDL_GL_SwapWindow(m_window);
 }

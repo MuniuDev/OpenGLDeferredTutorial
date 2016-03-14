@@ -9,16 +9,16 @@
 #pragma once
 
 #include <Common.hpp>
-#include <Renderer.hpp>
+#include <Context.hpp>
 
 class WindowEventHandler {
  public:
-  WindowEventHandler(std::shared_ptr<RendererContext> renderer);
+  WindowEventHandler(std::shared_ptr<Context> renderer);
 
   void PollEvents();
   bool ShouldClose();
 
  private:
-  std::shared_ptr<RendererContext> m_renderer;
+  std::shared_ptr<Context> m_renderer;
   bool m_shouldClose;
 };

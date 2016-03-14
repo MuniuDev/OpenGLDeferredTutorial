@@ -170,8 +170,6 @@ void Mesh::MeshEntry::Draw(float dt) {
   glBindVertexArray(0);
 }
 
-#include <set>
-
 GLuint create_texture(char const *Filename) {
 
   LOGD("SOIL loading: '{}'", Filename);

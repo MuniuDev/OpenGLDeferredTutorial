@@ -14,6 +14,8 @@
 #include <Common.hpp>
 #include <ShaderProgram.hpp>
 #include <Camera.hpp>
+#include <Renderer.hpp>
+#include <Scene.hpp>
 
 class Viewport {
  public:
@@ -23,10 +25,17 @@ class Viewport {
   void Resize(float width, float height);
   void Draw(float dt);
 
+  void SetActiveRenderer(RendererType type);
+
  private:
   float m_width;
   float m_height;
 
-  Camera m_camera;
-  std::shared_ptr<ShaderProgram> m_shader;
+  std::shared_ptr<Scene> m_scene;
+  std::shared_ptr<Camera> m_camera;
+
+  std::shared_ptr<Renderer> m_renderer; //current renderer
+
+  std::shared_ptr<DeferredRenderer> m_deferredRenderer;
+  std::shared_ptr<ForwardRenderer> m_forwardRenderer;
 };
