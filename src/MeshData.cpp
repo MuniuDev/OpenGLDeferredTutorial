@@ -6,21 +6,21 @@
 * Author: Michal Majczak <michal.majczak92@gmail.com>
 */
 
-#include <Mesh.hpp>
+#include <MeshData.hpp>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/cimport.h>
 
-Mesh::Mesh(const std::string &path,
-           const std::string &fileName)
+MeshData::MeshData(const std::string &path,
+                   const std::string &fileName)
   : m_path(path)
   , m_fileName(fileName) {
 
 }
 
-void Mesh::Init() {
+bool MeshData::Init() {
   m_meshEntries.clear();
 
   Assimp::Importer importer;
@@ -29,7 +29,7 @@ void Mesh::Init() {
 
   if (!scene) {
     LOGE("Error Importing Asset: {}",  importer.GetErrorString());
-    return;
+    return false;
   }
 
   LOGD("Loading model {} sucessfull.", m_path + m_fileName);
@@ -38,36 +38,13 @@ void Mesh::Init() {
                             scene->mMeshes[i],
                             scene->mMaterials[i]));
   }
+  return true;
 }
 
-void Mesh::Draw(float dt) {
-
-  m_shader->SetUniform("u_transform", GetTransformation());
-
+void MeshData::Draw(float dt) {
   for (auto &meshEntry : m_meshEntries) {
     m_shader->SetUniform("u_material.specularIntensity", meshEntry->mtl.specularIntensity);
     m_shader->SetUniform("u_material.specularPower", meshEntry->mtl.specularPower);
     meshEntry->Draw(dt);
   }
-
-}
-
-glm::mat4 Mesh::GetTransformation() const {
-  return  glm::translate(glm::mat4(1.0f), m_pos) * glm::mat4_cast(m_rot);
-}
-
-void Mesh::Move(const glm::vec3 &dir) {
-  m_pos += dir;
-}
-
-void Mesh::Rotate(const glm::quat &rot) {
-  m_rot = glm::normalize(rot) * m_rot;
-}
-
-void Mesh::SetPos(const glm::vec3 &pos) {
-  m_pos = pos;
-}
-
-void Mesh::SetRot(const glm::quat &rot) {
-  m_rot = glm::normalize(rot);
 }

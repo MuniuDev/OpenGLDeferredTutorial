@@ -16,13 +16,14 @@ out vec3 v_normal;
 
 uniform mat4 u_mvp;
 uniform mat4 u_transform;
+uniform mat4 u_rot;
 
 void main()
 {
   // pass the varying variables to fsh
   v_vertexPos = (vec4(a_vertexPos, 0) * u_transform).xyz;
   v_texCoord = a_texCoord;
-  v_normal = (vec4(a_normal, 0) * u_transform).xyz;
+  v_normal = (vec4(a_normal, 0) * u_rot).xyz;
 
   // calculate postion of the vertex
   gl_Position = u_mvp * u_transform * vec4(a_vertexPos, 1);

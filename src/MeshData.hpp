@@ -18,23 +18,19 @@
 class aiMesh;
 class aiMaterial;
 
-class Mesh : public INode {
+class MeshData {
  public:
-  Mesh(const std::string &path,
-       const std::string &fileName);
-  Mesh(const Mesh &that) = delete;
+  MeshData(const std::string &path,
+           const std::string &fileName);
+  MeshData(const MeshData &) = delete;
 
-  void Init() override;
-  void Draw(float dt) override;
+  void Draw(float dt);
   void SetShader(std::shared_ptr<ShaderProgram> shader) { m_shader = shader; }
-  glm::mat4 GetTransformation() const override;
-
-  void SetPos(const glm::vec3 &pos) override;
-  void SetRot(const glm::quat &rot) override;
-  void Move(const glm::vec3 &dir) override;
-  void Rotate(const glm::quat &rot) override;
 
  private:
+  friend class MeshFactory;
+  bool Init();
+
   struct MeshEntry {
     MeshEntry(const std::string &path, aiMesh *mesh, aiMaterial *material);
     ~MeshEntry();
@@ -65,7 +61,5 @@ class Mesh : public INode {
   std::string m_path;
   std::string m_fileName;
 
-  glm::vec3 m_pos;
-  glm::quat m_rot;
   std::shared_ptr<ShaderProgram> m_shader;
 };

@@ -15,6 +15,7 @@ class INode {
   virtual void Init() = 0;
   virtual void Draw(float dt) = 0;
   virtual glm::mat4 GetTransformation() const = 0;
+  virtual glm::mat4 GetRotation() const = 0;
 
   virtual void SetPos(const glm::vec3 &pos) = 0;
   virtual void SetRot(const glm::quat &rot) = 0;

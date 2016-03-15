@@ -18,6 +18,7 @@ ForwardRenderer::ForwardRenderer(std::shared_ptr<Scene> scene)
 
   m_shader->RegisterUniform("u_mvp");
   m_shader->RegisterUniform("u_transform");
+  m_shader->RegisterUniform("u_rot");
 
   m_shader->RegisterUniform("u_ambientLight.color");
   m_shader->RegisterUniform("u_ambientLight.intensity");

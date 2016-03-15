@@ -6,7 +6,7 @@
 * Author: Michal Majczak <michal.majczak92@gmail.com>
 */
 
-#include <Mesh.hpp>
+#include <MeshData.hpp>
 
 #include <assimp/scene.h>
 
@@ -20,9 +20,9 @@ static const int MIPMAP_AMOUNT = 4;
 
 GLuint create_texture(char const *Filename);
 
-Mesh::MeshEntry::MeshEntry(const std::string &path,
-                           aiMesh *mesh,
-                           aiMaterial *material) {
+MeshData::MeshEntry::MeshEntry(const std::string &path,
+                               aiMesh *mesh,
+                               aiMaterial *material) {
   vbo[VERTEX_BUFFER] = 0;
   vbo[TEXCOORD_BUFFER] = 0;
   vbo[NORMAL_BUFFER] = 0;
@@ -142,7 +142,7 @@ Mesh::MeshEntry::MeshEntry(const std::string &path,
   LOGD("Specular: {}, {}", mtl.specularIntensity, mtl.specularPower);
 }
 
-Mesh::MeshEntry::~MeshEntry() {
+MeshData::MeshEntry::~MeshEntry() {
   if (vbo[VERTEX_BUFFER]) {
     glDeleteBuffers(1, &vbo[VERTEX_BUFFER]);
   }
@@ -162,7 +162,7 @@ Mesh::MeshEntry::~MeshEntry() {
   glDeleteVertexArrays(1, &vao);
 }
 
-void Mesh::MeshEntry::Draw(float dt) {
+void MeshData::MeshEntry::Draw(float dt) {
   glBindVertexArray(vao);
   glBindTexture(GL_TEXTURE_2D, texID);
   glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, NULL);

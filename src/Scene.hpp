@@ -12,7 +12,7 @@
 
 #include <vector>
 
-#include <Mesh.hpp>
+#include <MeshFactory.hpp>
 #include <Camera.hpp>
 
 class Scene {
@@ -26,5 +26,5 @@ class Scene {
   std::shared_ptr<Camera> GetCamera();
 
   std::shared_ptr<Camera> m_camera;
-  std::vector<std::shared_ptr<Mesh>> m_meshes;
+  std::vector<std::shared_ptr<MeshNode>> m_meshes;
 };
