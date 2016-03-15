@@ -41,6 +41,5 @@ void MeshNode::SetRot(const glm::quat &rot) {
 
 void MeshNode::Draw(float dt) {
   m_shader->SetUniform("u_transform", GetTransformation());
-  m_shader->SetUniform("u_rot", GetRotation());
   m_mesh->Draw(dt);
 }

@@ -48,6 +48,7 @@ class MeshData {
     struct Material {
       float specularIntensity;
       float specularPower;
+      glm::vec3 specularColor;
     };
 
     GLuint vao;

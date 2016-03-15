@@ -18,7 +18,6 @@ ForwardRenderer::ForwardRenderer(std::shared_ptr<Scene> scene)
 
   m_shader->RegisterUniform("u_mvp");
   m_shader->RegisterUniform("u_transform");
-  m_shader->RegisterUniform("u_rot");
 
   m_shader->RegisterUniform("u_ambientLight.color");
   m_shader->RegisterUniform("u_ambientLight.intensity");
@@ -27,6 +26,7 @@ ForwardRenderer::ForwardRenderer(std::shared_ptr<Scene> scene)
 
   m_shader->RegisterUniform("u_material.specularIntensity");
   m_shader->RegisterUniform("u_material.specularPower");
+  m_shader->RegisterUniform("u_material.specularColor");
 
   m_shader->RegisterUniform("u_directionalLight.base.color");
   m_shader->RegisterUniform("u_directionalLight.base.intensity");
