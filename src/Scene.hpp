@@ -14,6 +14,7 @@
 
 #include <MeshFactory.hpp>
 #include <Camera.hpp>
+#include <Lights.hpp>
 
 class Scene {
  public:
@@ -27,4 +28,9 @@ class Scene {
 
   std::shared_ptr<Camera> m_camera;
   std::vector<std::shared_ptr<MeshNode>> m_meshes;
+
+  // scene lighting
+  AmbientLight m_ambientLight;
+  DirectionalLight m_directionalLight;
+  std::vector<PointLight> m_pointLights;
 };

@@ -142,8 +142,8 @@ MeshData::MeshEntry::MeshEntry(const std::string &path,
   material->Get(AI_MATKEY_COLOR_SPECULAR, color);
   mtl.specularColor = glm::vec3(color.r, color.b, color.g);
 
-  LOGD("Specular params: {}, {}, [{},{},{}]", mtl.specularIntensity, mtl.specularPower, 
-    mtl.specularColor.x, mtl.specularColor.y, mtl.specularColor.z);
+  LOGD("Specular params: {}, {}, [{},{},{}]", mtl.specularIntensity, mtl.specularPower,
+       mtl.specularColor.x, mtl.specularColor.y, mtl.specularColor.z);
 }
 
 MeshData::MeshEntry::~MeshEntry() {
