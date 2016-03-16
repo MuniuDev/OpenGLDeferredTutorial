@@ -24,6 +24,14 @@ struct DirectionalLight
 	vec3 direction;
 };
 
+struct PointLight
+{
+	BaseLight base;
+	vec3 position;
+	float range;
+	float attenuation;
+};
+
 struct Material
 {
 	float specularIntensity;
@@ -38,6 +46,8 @@ uniform Material u_material;
 // lights
 uniform BaseLight u_ambientLight;
 uniform DirectionalLight u_directionalLight;
+uniform PointLight u_pointLights[10];
+uniform int u_lightCount;
 
 uniform sampler2D gSampler;
 uniform mat4 u_transform;
@@ -85,6 +95,13 @@ vec4 specularLight(BaseLight base, vec3 direction, vec3 normal, vec3 vertexPos) 
 	return specularColor * vec4(u_material.specularColor,1);
 }
 
+float pointLightAttenuation(PointLight light, vec3 vertexPos) {
+	float distanceToLight = length(light.position - vertexPos);
+	if( distanceToLight > light.range )
+		return 0.0f;
+    return 1.0 / (1.0 + light.attenuation * pow(distanceToLight, 2));
+}
+
 void main()
 {
 	vec4 tex_color = texture(gSampler, v_texCoord);
@@ -100,6 +117,13 @@ void main()
 	vec4 directional = tex_color * diffuseLight(u_directionalLight.base, u_directionalLight.direction, normal);
 	directional += specularLight(u_directionalLight.base, u_directionalLight.direction, normal, vertexPos);
 	
+	vec4 point = vec4(0,0,0,0);
+	for(int i=0; i<u_lightCount; ++i) {
+		vec4 tmp = tex_color * diffuseLight(u_pointLights[i].base, normalize(u_pointLights[i].position - vertexPos), normal);
+		tmp += specularLight(u_pointLights[i].base, normalize(u_pointLights[i].position - vertexPos), normal, vertexPos);
+		point += tmp * pointLightAttenuation(u_pointLights[i], vertexPos);
+	}
+	
 	// calculate final color
-    frag_color = ambient + directional;
+    frag_color = ambient + directional + point;
 }
