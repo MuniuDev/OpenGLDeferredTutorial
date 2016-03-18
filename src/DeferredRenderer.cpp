@@ -34,7 +34,8 @@ void DeferredRenderer::InitRenderer(float width, float height) {
   m_gbuffer = std::make_shared<GBuffer>();
   m_gbuffer->Init(width, height);
 
-
+  m_width = width;
+  m_height = height;
 }
 
 void DeferredRenderer::RenderScene(float dt) {
@@ -45,8 +46,10 @@ void DeferredRenderer::RenderScene(float dt) {
 }
 
 void DeferredRenderer::GeometryPass(float dt) {
-  m_shader->BindProgram();
 
+  m_gbuffer->BindForWriting();
+
+  m_shader->BindProgram();
   m_shader->SetUniform("u_mvp", m_scene->GetCamera()->GetMVP());
 
   for (auto &mesh : m_scene->m_meshes)
@@ -55,4 +58,19 @@ void DeferredRenderer::GeometryPass(float dt) {
 
 void DeferredRenderer::LightPass(float dt) {
 
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+  m_gbuffer->BindForReading();
+
+  m_gbuffer->SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_POSITION);
+  glBlitFramebuffer(0, 0, m_width, m_height, 0, 0, m_width / 2.0f, m_height / 2.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+  m_gbuffer->SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_DIFFUSE);
+  glBlitFramebuffer(0, 0, m_width, m_height, 0, m_height / 2.0f, m_width / 2.0f, m_height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+  m_gbuffer->SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_NORMAL);
+  glBlitFramebuffer(0, 0, m_width, m_height, m_width / 2.0f, m_height / 2.0f, m_width, m_height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+  m_gbuffer->SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_TEXCOORD);
+  glBlitFramebuffer(0, 0, m_width, m_height, m_width / 2.0f, 0, m_width, m_height / 2.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 }

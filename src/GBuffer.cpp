@@ -68,6 +68,7 @@ bool GBuffer::Init(unsigned int width, unsigned int height) {
 
 void GBuffer::BindForWriting() {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void GBuffer::BindForReading() {

@@ -2,7 +2,7 @@
 * Copyright by Michal Majczak & Krzysztof Taperek, 2016
 * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 *
-* Author: Krzysztof Taperek <michal.majczak92@gmail.com>
+* Author: Krzysztof Taperek <krzysztoftaperek@gmail.com>
 */
 
 #version 330 core

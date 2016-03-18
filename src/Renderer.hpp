@@ -61,4 +61,6 @@ class DeferredRenderer : public Renderer {
 
  protected:
   std::shared_ptr<GBuffer> m_gbuffer;
+  int m_width;
+  int m_height;
 };
