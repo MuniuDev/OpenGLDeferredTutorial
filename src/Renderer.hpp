@@ -26,6 +26,7 @@ class Renderer {
 
   virtual void InitRenderer(float, float) = 0;
   virtual void RenderScene(float dt) = 0;
+  virtual void Resize(float, float) = 0;
 
   RendererType GetType() {
     return type;
@@ -46,6 +47,7 @@ class ForwardRenderer : public Renderer {
 
   void InitRenderer(float, float);
   void RenderScene(float dt);
+  void Resize(float, float);
 };
 
 class DeferredRenderer : public Renderer {
@@ -56,11 +58,15 @@ class DeferredRenderer : public Renderer {
   void InitRenderer(float width, float height);
   void RenderScene(float dt);
 
+  void Resize(float width, float height);
+
   void GeometryPass(float dt);
   void LightPass(float dt);
 
  protected:
   std::shared_ptr<GBuffer> m_gbuffer;
-  int m_width;
-  int m_height;
+  float m_width;
+  float m_height;
+
+  void ResetBuffers();
 };

@@ -29,13 +29,10 @@ void DeferredRenderer::InitRenderer(float width, float height) {
   for (auto &mesh : m_scene->m_meshes)
   { mesh->SetShader(m_shader); }
 
-  m_gbuffer.reset();
-
-  m_gbuffer = std::make_shared<GBuffer>();
-  m_gbuffer->Init(width, height);
-
   m_width = width;
   m_height = height;
+
+  ResetBuffers();
 }
 
 void DeferredRenderer::RenderScene(float dt) {
@@ -73,4 +70,18 @@ void DeferredRenderer::LightPass(float dt) {
 
   m_gbuffer->SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_TEXCOORD);
   glBlitFramebuffer(0, 0, m_width, m_height, m_width / 2.0f, 0, m_width, m_height / 2.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+}
+
+void DeferredRenderer::Resize(float width, float height) {
+  m_width = width;
+  m_height = height;
+
+  ResetBuffers();
+}
+
+void DeferredRenderer::ResetBuffers() {
+  m_gbuffer.reset();
+
+  m_gbuffer = std::make_shared<GBuffer>();
+  m_gbuffer->Init(m_width, m_height);
 }

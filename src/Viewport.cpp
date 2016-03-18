@@ -23,6 +23,8 @@ void Viewport::Resize(float width, float height) {
   m_width = width;
   m_height = height;
   m_camera->Resize(45.0f, m_width / m_height, 0.1f, 1000.0f);
+
+  m_renderer->Resize(m_width, m_height);
 }
 
 void Viewport::Init() {

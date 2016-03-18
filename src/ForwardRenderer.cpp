@@ -101,3 +101,7 @@ void ForwardRenderer::RenderScene(float dt) {
   //unbind shader
   glUseProgram(0);
 }
+
+void ForwardRenderer::Resize(float, float) {
+
+}
