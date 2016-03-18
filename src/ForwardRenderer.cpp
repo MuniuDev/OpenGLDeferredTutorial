@@ -61,7 +61,7 @@ ForwardRenderer::~ForwardRenderer() {
 
 }
 
-void ForwardRenderer::InitRenderer() {
+void ForwardRenderer::InitRenderer(float, float) {
 
   for (auto &mesh : m_scene->m_meshes)
   { mesh->SetShader(m_shader); }

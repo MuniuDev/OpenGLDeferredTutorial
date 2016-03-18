@@ -36,7 +36,7 @@ void Viewport::Init() {
   m_forwardRenderer = std::make_shared<ForwardRenderer>(m_scene);
 
   m_renderer = m_forwardRenderer;
-  m_renderer->InitRenderer();
+  m_renderer->InitRenderer(m_width, m_height);
 }
 
 void Viewport::Draw(float dt) {
@@ -64,12 +64,12 @@ void Viewport::SetActiveRenderer(RendererType type) {
         break;
       case RendererType::DEFERRED:
         m_renderer = m_deferredRenderer;
-        LOGD("Changed renderer to deffered");
+        LOGD("Changed renderer to deferred");
         break;
       default:
         break;
     }
 
-    m_renderer->InitRenderer();
+    m_renderer->InitRenderer(m_width, m_height);
   }
 }

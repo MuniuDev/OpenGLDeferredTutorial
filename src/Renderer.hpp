@@ -10,6 +10,7 @@
 
 #include <Common.hpp>
 #include <Scene.hpp>
+#include <GBuffer.hpp>
 
 
 enum class RendererType {
@@ -23,7 +24,7 @@ class Renderer {
     : m_scene(scene) { }
   virtual ~Renderer() { }
 
-  virtual void InitRenderer() = 0;
+  virtual void InitRenderer(float, float) = 0;
   virtual void RenderScene(float dt) = 0;
 
   RendererType GetType() {
@@ -43,7 +44,7 @@ class ForwardRenderer : public Renderer {
   ForwardRenderer(std::shared_ptr<Scene> scene);
   ~ForwardRenderer();
 
-  void InitRenderer();
+  void InitRenderer(float, float);
   void RenderScene(float dt);
 };
 
@@ -52,6 +53,12 @@ class DeferredRenderer : public Renderer {
   DeferredRenderer(std::shared_ptr<Scene> scene);
   ~DeferredRenderer();
 
-  void InitRenderer();
+  void InitRenderer(float width, float height);
   void RenderScene(float dt);
+
+  void GeometryPass(float dt);
+  void LightPass(float dt);
+
+ protected:
+  std::shared_ptr<GBuffer> m_gbuffer;
 };
