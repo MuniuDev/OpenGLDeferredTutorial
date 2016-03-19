@@ -59,7 +59,14 @@ bool GBuffer::Init(unsigned int width, unsigned int height) {
   GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
   if (status != GL_FRAMEBUFFER_COMPLETE) {
-    LOGE("FrameBuffer error, status: {}", status);
+    std::string text;
+    switch (status) {
+    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: text = "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT"; break;
+    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: text = "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT"; break;
+    case GL_FRAMEBUFFER_UNSUPPORTED: text = "GL_FRAMEBUFFER_UNSUPPORTED"; break;
+    default: text = "NO DESCRIPTION"; break;
+    }
+    LOGE("FrameBuffer error, status: [{}] {}", status, text);
     return false;
   }
 
