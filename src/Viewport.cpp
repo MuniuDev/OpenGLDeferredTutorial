@@ -28,7 +28,6 @@ void Viewport::Resize(float width, float height) {
 }
 
 void Viewport::Init() {
-
   m_camera = std::make_shared<Camera>(45.0f, m_width / m_height, 0.1f, 1000.0f);
 
   m_scene = std::make_shared<Scene>();
@@ -39,6 +38,7 @@ void Viewport::Init() {
 
   m_renderer = m_forwardRenderer;
   m_renderer->InitRenderer(m_width, m_height);
+  CHECK_GL_ERR();
 }
 
 void Viewport::Draw(float dt) {

@@ -33,6 +33,8 @@ class GBuffer {
 
   void SetReadBuffer(GBUFFER_TEXTURE_TYPE textureType);
 
+  void DebugDraw(float width, float height);
+
  private:
 
   GLuint m_fbo;

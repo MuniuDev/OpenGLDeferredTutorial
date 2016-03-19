@@ -23,7 +23,6 @@ class Context {
   void HandleWindowEvent(const SDL_Event &event);
 
  private:
-  void Clear();
   void Draw();
   void SwapBuffers();
 

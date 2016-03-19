@@ -33,7 +33,6 @@ class Renderer {
   }
 
  protected:
-  std::shared_ptr<ShaderProgram> m_shader;
   std::shared_ptr<Scene> m_scene;
 
   RendererType type;
@@ -48,6 +47,9 @@ class ForwardRenderer : public Renderer {
   void InitRenderer(float, float);
   void RenderScene(float dt);
   void Resize(float, float);
+
+ private:
+  std::shared_ptr<ShaderProgram> m_shader;
 };
 
 class DeferredRenderer : public Renderer {
@@ -60,6 +62,7 @@ class DeferredRenderer : public Renderer {
 
   void Resize(float width, float height);
 
+ private:
   void GeometryPass(float dt);
   void LightPass(float dt);
 
@@ -69,4 +72,8 @@ class DeferredRenderer : public Renderer {
   float m_height;
 
   void ResetBuffers();
+
+ private:
+  std::shared_ptr<ShaderProgram> m_geometryShader;
+  std::shared_ptr<ShaderProgram> m_lightShader;
 };

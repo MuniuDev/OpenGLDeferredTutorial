@@ -19,12 +19,12 @@ layout (location = 3) out vec3 texCoordOut;
 out vec4 frag_color;
 
 uniform sampler2D gSampler;
-
+uniform mat4 u_transform;
 
 void main()
 {
-	vertexPosOut = v_vertexPos;
+	vertexPosOut = vec3(u_transform * vec4(v_vertexPos, 1));
 	diffuseOut = texture(gSampler, v_texCoord).xyz;	
-	normalOut = normalize(v_normal);
+	normalOut = normalize(transpose(inverse(mat3(u_transform))) * v_normal);
 	texCoordOut = vec3(v_texCoord, 0.0);
 }
