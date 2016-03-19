@@ -44,6 +44,7 @@ Context::Context(float width, float height, std::string name)
     LOGE("OpenGL context could not be created! SDL Error: {}", SDL_GetError());
     std::exit(-1);
   }
+  CHECK_GL_ERR();
 
   //Initialize GLEW
   glewExperimental = GL_TRUE;
@@ -51,11 +52,13 @@ Context::Context(float width, float height, std::string name)
   if (glewError != GLEW_OK) {
     LOGW("Failed to initialize GLEW! {}", glewGetErrorString(glewError));
   }
+  CHECK_GL_ERR();
 
   //Use Vsync
-  if (SDL_GL_SetSwapInterval( 1 ) < 0) {
+  if (SDL_GL_SetSwapInterval( 0 ) < 0) {
     LOGW("Unable to set VSync! SDL Error: {}", SDL_GetError());
   }
+  CHECK_GL_ERR();
 
   LOGD("Success initializing graphics context!");
 }
@@ -71,7 +74,6 @@ Context::~Context() {
 }
 
 void Context::Tic() {
-  Clear();
   Draw();
   SwapBuffers();
 }
@@ -81,11 +83,11 @@ void Context::InitGL() {
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glFrontFace(GL_CCW);
-
-  glEnable(GL_DEPTH_TEST);
+  CHECK_GL_ERR();
 
   // init viewports
   m_viewport.Init();
+  m_fpsCounter.Init();
 }
 
 void Context::HandleWindowEvent(const SDL_Event &event) {
@@ -100,15 +102,11 @@ void Context::HandleWindowEvent(const SDL_Event &event) {
   }
 }
 
-void Context::Clear() {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  // clear to sky color
-  glClearColor(126.0f / 255.0f, 192.0f / 255.0f, 238.0f / 255.0f, 1.0f);
-}
-
 void Context::Draw() {
   //drawing here
-  m_viewport.Draw(0.016f);
+  float dt = m_fpsCounter.TicAndGetDeltaTime();
+  m_viewport.Draw(dt);
+  m_fpsCounter.Print();
 }
 
 void Context::SwapBuffers() {

@@ -10,6 +10,7 @@
 
 #include <Common.hpp>
 #include <Viewport.hpp>
+#include <FPSCounter.hpp>
 
 #include <vector>
 
@@ -23,7 +24,6 @@ class Context {
   void HandleWindowEvent(const SDL_Event &event);
 
  private:
-  void Clear();
   void Draw();
   void SwapBuffers();
 
@@ -32,6 +32,7 @@ class Context {
 
   // Viewports
   Viewport m_viewport;
+  FPSCounter m_fpsCounter;
 
   //SDL
   SDL_Window *m_window;

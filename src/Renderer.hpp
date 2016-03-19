@@ -10,6 +10,7 @@
 
 #include <Common.hpp>
 #include <Scene.hpp>
+#include <GBuffer.hpp>
 
 
 enum class RendererType {
@@ -23,15 +24,15 @@ class Renderer {
     : m_scene(scene) { }
   virtual ~Renderer() { }
 
-  virtual void InitRenderer() = 0;
+  virtual void InitRenderer(float, float) = 0;
   virtual void RenderScene(float dt) = 0;
+  virtual void Resize(float, float) = 0;
 
   RendererType GetType() {
     return type;
   }
 
  protected:
-  std::shared_ptr<ShaderProgram> m_shader;
   std::shared_ptr<Scene> m_scene;
 
   RendererType type;
@@ -43,8 +44,12 @@ class ForwardRenderer : public Renderer {
   ForwardRenderer(std::shared_ptr<Scene> scene);
   ~ForwardRenderer();
 
-  void InitRenderer();
+  void InitRenderer(float, float);
   void RenderScene(float dt);
+  void Resize(float, float);
+
+ private:
+  std::shared_ptr<ShaderProgram> m_shader;
 };
 
 class DeferredRenderer : public Renderer {
@@ -52,6 +57,23 @@ class DeferredRenderer : public Renderer {
   DeferredRenderer(std::shared_ptr<Scene> scene);
   ~DeferredRenderer();
 
-  void InitRenderer();
+  void InitRenderer(float width, float height);
   void RenderScene(float dt);
+
+  void Resize(float width, float height);
+
+ private:
+  void GeometryPass(float dt);
+  void LightPass(float dt);
+
+ protected:
+  std::shared_ptr<GBuffer> m_gbuffer;
+  float m_width;
+  float m_height;
+
+  void ResetBuffers();
+
+ private:
+  std::shared_ptr<ShaderProgram> m_geometryShader;
+  std::shared_ptr<ShaderProgram> m_lightShader;
 };

@@ -13,6 +13,7 @@
 
 #define MAX_POINT_LIGHT 10
 
+namespace {
 std::string ArrayUniformName(const std::string &name, const std::string &field, int idx) {
   std::stringstream ss("");
   ss << name;
@@ -21,6 +22,7 @@ std::string ArrayUniformName(const std::string &name, const std::string &field, 
   ss << "].";
   ss << field;
   return ss.str();
+}
 }
 
 ForwardRenderer::ForwardRenderer(std::shared_ptr<Scene> scene)
@@ -61,14 +63,18 @@ ForwardRenderer::~ForwardRenderer() {
 
 }
 
-void ForwardRenderer::InitRenderer() {
-
+void ForwardRenderer::InitRenderer(float, float) {
   for (auto &mesh : m_scene->m_meshes)
   { mesh->SetShader(m_shader); }
-
 }
 
 void ForwardRenderer::RenderScene(float dt) {
+  // FB initialization
+  glDepthMask(GL_TRUE);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClearColor(0, 0, 0, 0);
+  glEnable(GL_DEPTH_TEST);
+
   m_shader->BindProgram();
 
   m_shader->SetUniform("u_ambientLight.color", m_scene->m_ambientLight.color);
@@ -100,4 +106,10 @@ void ForwardRenderer::RenderScene(float dt) {
 
   //unbind shader
   glUseProgram(0);
+  glDepthMask(GL_FALSE);
+  glDisable(GL_DEPTH_TEST);
+}
+
+void ForwardRenderer::Resize(float, float) {
+
 }

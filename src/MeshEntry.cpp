@@ -49,7 +49,7 @@ MeshData::MeshEntry::MeshEntry(const std::string &path,
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(0);
   }
-
+  CHECK_GL_ERR();
 
   if (mesh->HasTextureCoords(0)) {
     auto texCoords = std::vector<float>(mesh->mNumVertices * 2, 0);
@@ -66,7 +66,7 @@ MeshData::MeshEntry::MeshEntry(const std::string &path,
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(1);
   }
-
+  CHECK_GL_ERR();
 
   if (mesh->HasNormals()) {
     auto normals = std::vector<float>(mesh->mNumVertices * 3, 0);
@@ -84,7 +84,7 @@ MeshData::MeshEntry::MeshEntry(const std::string &path,
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(2);
   }
-
+  CHECK_GL_ERR();
 
   if (mesh->HasFaces()) {
     auto indices = std::vector<unsigned int>(mesh->mNumFaces * 3, 0);
@@ -102,7 +102,7 @@ MeshData::MeshEntry::MeshEntry(const std::string &path,
     glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, NULL);
     glEnableVertexAttribArray(3);
   }
-
+  CHECK_GL_ERR();
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glBindVertexArray(0);
@@ -168,6 +168,7 @@ MeshData::MeshEntry::~MeshEntry() {
 
 void MeshData::MeshEntry::Draw(float dt) {
   glBindVertexArray(vao);
+  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texID);
   glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, NULL);
   glBindTexture(GL_TEXTURE_2D, 0);
@@ -201,9 +202,10 @@ GLuint create_texture(char const *Filename) {
       }
     }
   }
+  CHECK_GL_ERR();
 
   GLuint TextureName = 0;
-  glEnable(GL_TEXTURE_2D);
+  glActiveTexture(GL_TEXTURE0);
   glGenTextures(1, &TextureName);
   glBindTexture(GL_TEXTURE_2D, TextureName);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -217,6 +219,6 @@ GLuint create_texture(char const *Filename) {
   glGenerateMipmap(GL_TEXTURE_2D);
 
   SOIL_free_image_data(img);
-
+  CHECK_GL_ERR();
   return TextureName;
 }

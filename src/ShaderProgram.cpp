@@ -96,6 +96,7 @@ void ShaderProgram::LoadShader(int type, const std::string &shaderName) {
 
   glAttachShader(m_program, shader);
   glDeleteShader(shader);  //is it ok to do it here?
+  CHECK_GL_ERR();
 }
 
 GLuint ShaderProgram::GetProgramHandle() const {
@@ -103,7 +104,14 @@ GLuint ShaderProgram::GetProgramHandle() const {
 }
 
 void ShaderProgram::RegisterUniform(const std::string &name) {
-  m_uniforms[name] = glGetUniformLocation(m_program, name.c_str());
+  GLint tmp = 0;
+  tmp = glGetUniformLocation(m_program, name.c_str());
+  if (tmp == -1) {
+    LOGE("Invalid uniform location for {}", name);
+    return;
+  }
+  m_uniforms[name] = tmp;
+  CHECK_GL_ERR();
 }
 
 void ShaderProgram::SetUniform(const std::string &name, int val) {
@@ -112,6 +120,10 @@ void ShaderProgram::SetUniform(const std::string &name, int val) {
 
 void ShaderProgram::SetUniform(const std::string &name, float val) {
   glUniform1f(m_uniforms[name], val);
+}
+
+void ShaderProgram::SetUniform(const std::string &name, const glm::vec2 &val) {
+  glUniform2f(m_uniforms[name], val.x, val.y);
 }
 
 void ShaderProgram::SetUniform(const std::string &name, const glm::vec3 &val) {

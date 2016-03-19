@@ -23,10 +23,11 @@ void Viewport::Resize(float width, float height) {
   m_width = width;
   m_height = height;
   m_camera->Resize(45.0f, m_width / m_height, 0.1f, 1000.0f);
+
+  m_renderer->Resize(m_width, m_height);
 }
 
 void Viewport::Init() {
-
   m_camera = std::make_shared<Camera>(45.0f, m_width / m_height, 0.1f, 1000.0f);
 
   m_scene = std::make_shared<Scene>();
@@ -36,7 +37,8 @@ void Viewport::Init() {
   m_forwardRenderer = std::make_shared<ForwardRenderer>(m_scene);
 
   m_renderer = m_forwardRenderer;
-  m_renderer->InitRenderer();
+  m_renderer->InitRenderer(m_width, m_height);
+  CHECK_GL_ERR();
 }
 
 void Viewport::Draw(float dt) {
@@ -64,12 +66,12 @@ void Viewport::SetActiveRenderer(RendererType type) {
         break;
       case RendererType::DEFERRED:
         m_renderer = m_deferredRenderer;
-        LOGD("Changed renderer to deffered");
+        LOGD("Changed renderer to deferred");
         break;
       default:
         break;
     }
 
-    m_renderer->InitRenderer();
+    m_renderer->InitRenderer(m_width, m_height);
   }
 }
