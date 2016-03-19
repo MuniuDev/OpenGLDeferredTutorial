@@ -12,7 +12,7 @@
 
 
 static const float MOVE_SPEED = 10.0f;
-static const float ROT_SPEED = 0.5f;
+static const float ROT_SPEED = 20.0f;
 
 
 Camera::Camera(float fov, float aspect, float clipNear, float clipFar) {

@@ -55,7 +55,7 @@ Context::Context(float width, float height, std::string name)
   CHECK_GL_ERR();
 
   //Use Vsync
-  if (SDL_GL_SetSwapInterval( 1 ) < 0) {
+  if (SDL_GL_SetSwapInterval( 0 ) < 0) {
     LOGW("Unable to set VSync! SDL Error: {}", SDL_GetError());
   }
   CHECK_GL_ERR();
@@ -87,6 +87,7 @@ void Context::InitGL() {
 
   // init viewports
   m_viewport.Init();
+  m_fpsCounter.Init();
 }
 
 void Context::HandleWindowEvent(const SDL_Event &event) {
@@ -103,7 +104,9 @@ void Context::HandleWindowEvent(const SDL_Event &event) {
 
 void Context::Draw() {
   //drawing here
-  m_viewport.Draw(0.016f);
+  float dt = m_fpsCounter.TicAndGetDeltaTime();
+  m_viewport.Draw(dt);
+  m_fpsCounter.Print();
 }
 
 void Context::SwapBuffers() {
