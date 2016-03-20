@@ -12,7 +12,7 @@
 
 
 static const float MOVE_SPEED = 10.0f;
-static const float ROT_SPEED = 20.0f;
+static const float ROT_SPEED = 0.008f;
 
 
 Camera::Camera(float fov, float aspect, float clipNear, float clipFar) {
@@ -29,17 +29,17 @@ void Camera::Resize(float fov, float aspect, float clipNear, float clipFar) {
 }
 
 void Camera::HandleInput(float dt) {
-  glm::vec3 pos;
+  glm::vec3 pos = glm::vec3(0, 0, 0);
 
   if (g_input.GetKeyState(SDL_SCANCODE_A))
-  { pos = glm::vec3(-1, 0, 0); }
+    pos.x = -1;
   else if (g_input.GetKeyState(SDL_SCANCODE_D))
-  { pos = glm::vec3( 1, 0, 0); }
+    pos.x = 1;
 
   if (g_input.GetKeyState(SDL_SCANCODE_W))
-  { pos = glm::vec3(0, 0, -1); }
+    pos.z = -1;
   else if (g_input.GetKeyState(SDL_SCANCODE_S))
-  { pos = glm::vec3(0, 0, 1); }
+    pos.z = 1;
 
   if (glm::length(pos) > 0.0f) {
     pos = glm::normalize(pos) * MOVE_SPEED * dt;
@@ -47,14 +47,11 @@ void Camera::HandleInput(float dt) {
   }
 
   if (g_input.IsLMBPressed()) {
-    glm::vec2 v = g_input.GetMouseDeltaPos() * ROT_SPEED * dt;
+    glm::vec2 v = g_input.GetMouseDeltaPos() * ROT_SPEED;
     glm::quat rot = glm::angleAxis(-v.x, glm::vec3(0, 1, 0))
                     * glm::angleAxis(-v.y, GetRight());
     Rotate(rot);
   }
-
-  //LOGD("{},{},{}", m_pos.x, m_pos.y, m_pos.z);
-  //LOGD("{},{},{},{}", m_rot.x, m_rot.y, m_rot.z, m_rot.w);
 }
 
 glm::mat4 Camera::GetMVP() {
@@ -97,3 +94,4 @@ glm::vec3 Camera::GetFront() {
 glm::vec3 Camera::GetPos() {
   return m_pos;
 }
+
