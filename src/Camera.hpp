@@ -32,7 +32,6 @@ class Camera {
  private:
   glm::vec3 m_pos;
   glm::quat m_rot;
-  glm::mat4 m_MVP;
   glm::mat4 m_perspective;
 
   float m_fov;
