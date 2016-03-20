@@ -12,7 +12,7 @@
 
 
 static const float MOVE_SPEED = 10.0f;
-static const float ROT_SPEED = 8.0f;
+static const float ROT_SPEED = 0.008f;
 
 
 Camera::Camera(float fov, float aspect, float clipNear, float clipFar) {
@@ -47,7 +47,7 @@ void Camera::HandleInput(float dt) {
   }
 
   if (g_input.IsLMBPressed()) {
-    glm::vec2 v = g_input.GetMouseDeltaPos() * ROT_SPEED * dt;
+    glm::vec2 v = g_input.GetMouseDeltaPos() * ROT_SPEED;
     glm::quat rot = glm::angleAxis(-v.x, glm::vec3(0, 1, 0))
                     * glm::angleAxis(-v.y, GetRight());
     Rotate(rot);
