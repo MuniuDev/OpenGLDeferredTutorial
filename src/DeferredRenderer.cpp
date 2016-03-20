@@ -77,6 +77,10 @@ DeferredRenderer::DeferredRenderer(std::shared_ptr<Scene> scene)
   m_geometryShader->RegisterUniform("u_mvp");
   m_geometryShader->RegisterUniform("u_transform");
 
+  m_geometryShader->RegisterUniform("u_material.specularIntensity");
+  m_geometryShader->RegisterUniform("u_material.specularPower");
+  m_geometryShader->RegisterUniform("u_material.specularColor");
+
   m_lightShader = std::make_shared<ShaderProgram>("res/d_light.vsh", "res/d_light.fsh");
   m_lightShader->BindProgram();
   m_lightShader->RegisterUniform("u_mvp");
@@ -86,6 +90,8 @@ DeferredRenderer::DeferredRenderer(std::shared_ptr<Scene> scene)
   m_lightShader->RegisterUniform("gPositionMap");
   m_lightShader->RegisterUniform("gColorMap");
   m_lightShader->RegisterUniform("gNormalMap");
+  m_lightShader->RegisterUniform("gSpecularColorMap");
+  m_lightShader->RegisterUniform("gSpecularDataMap");
 
   m_lightShader->RegisterUniform("u_ambientLight.color");
   m_lightShader->RegisterUniform("u_ambientLight.intensity");
@@ -167,6 +173,8 @@ void DeferredRenderer::LightPass(float dt) {
   m_lightShader->SetUniform("gPositionMap", (int) GBuffer::GBUFFER_TEXTURE_TYPE_POSITION);
   m_lightShader->SetUniform("gColorMap", (int) GBuffer::GBUFFER_TEXTURE_TYPE_DIFFUSE);
   m_lightShader->SetUniform("gNormalMap", (int) GBuffer::GBUFFER_TEXTURE_TYPE_NORMAL);
+  m_lightShader->SetUniform("gSpecularColorMap", (int)GBuffer::GBUFFER_TEXTURE_TYPE_SPECULAR_COLOR);
+  m_lightShader->SetUniform("gSpecularDataMap", (int)GBuffer::GBUFFER_TEXTURE_TYPE_SPECULAR_DATA);
 
   m_lightShader->SetUniform("u_ambientLight.color", m_scene->m_ambientLight.color);
   m_lightShader->SetUniform("u_ambientLight.intensity", m_scene->m_ambientLight.intensity);

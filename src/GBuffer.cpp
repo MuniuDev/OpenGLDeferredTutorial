@@ -26,7 +26,6 @@ GBuffer::~GBuffer() {
   if (m_depthTexture != 0) {
     glDeleteTextures(1, &m_depthTexture);
   }
-  CHECK_GL_ERR();
 }
 
 bool GBuffer::Init(unsigned int width, unsigned int height) {
@@ -41,7 +40,17 @@ bool GBuffer::Init(unsigned int width, unsigned int height) {
 
   for (unsigned int i = 0 ; i < objSize ; i++) {
     glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+    //TODO request this to be optimized on the workshop
+    if (i == GBUFFER_TEXTURE_TYPE_SPECULAR_DATA) {
+      // specular data requires only 2 16-bit floats
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, width, height, 0, GL_RG, GL_FLOAT, NULL);
+    } else if (i == GBUFFER_TEXTURE_TYPE_DIFFUSE || i == GBUFFER_TEXTURE_TYPE_SPECULAR_COLOR) {
+      // color components are always positive and thus can be placed in GL_R11F_G11F_B10F
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
+    } else {
+      // rest of the data has to be in 3 16-bit floats
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
+    }
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, m_textures[i], 0);
@@ -53,7 +62,7 @@ bool GBuffer::Init(unsigned int width, unsigned int height) {
                NULL);
   glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
 
-  GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+  GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
   glDrawBuffers(sizeof(drawBuffers) / sizeof(drawBuffers[0]), drawBuffers);
 
   GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -61,10 +70,10 @@ bool GBuffer::Init(unsigned int width, unsigned int height) {
   if (status != GL_FRAMEBUFFER_COMPLETE) {
     std::string text;
     switch (status) {
-    case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: text = "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT"; break;
-    case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: text = "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT"; break;
-    case GL_FRAMEBUFFER_UNSUPPORTED: text = "GL_FRAMEBUFFER_UNSUPPORTED"; break;
-    default: text = "NO DESCRIPTION"; break;
+      case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: text = "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT"; break;
+      case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: text = "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT"; break;
+      case GL_FRAMEBUFFER_UNSUPPORTED: text = "GL_FRAMEBUFFER_UNSUPPORTED"; break;
+      default: text = "NO DESCRIPTION"; break;
     }
     LOGE("FrameBuffer error, status: [{}] {}", status, text);
     return false;
@@ -99,16 +108,22 @@ void GBuffer::DebugDraw(float width, float height) {
   glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);
 
   SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_POSITION);
-  glBlitFramebuffer(0, 0, width, height, 0, 0, width / 2.0f, height / 2.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+  glBlitFramebuffer(0, 0, width, height, 0, height * 1.0f / 3.0f, width / 2.0f, height * 2.0f / 3.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
   SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_DIFFUSE);
-  glBlitFramebuffer(0, 0, width, height, 0, height / 2.0f, width / 2.0f, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+  glBlitFramebuffer(0, 0, width, height, 0, height * 2.0f / 3.0f, width / 2.0f, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
   SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_NORMAL);
-  glBlitFramebuffer(0, 0, width, height, width / 2.0f, height / 2.0f, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+  glBlitFramebuffer(0, 0, width, height, width / 2.0f, height * 2.0f / 3.0f, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
-  SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_TEXCOORD);
-  glBlitFramebuffer(0, 0, width, height, width / 2.0f, 0, width, height / 2.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+  SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_SPECULAR_DATA);
+  glBlitFramebuffer(0, 0, width, height, 0, 0, width / 2.0f, height * 1.0f / 3.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+  SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_SPECULAR_COLOR);
+  glBlitFramebuffer(0, 0, width, height, width / 2.0f, height * 1.0f / 3.0f, width, height * 2.0f / 3.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+
+  // this is some place left for the last texture
+  //glBlitFramebuffer(0, 0, width, height, width / 2.0f, 0, width, height * 1.0f / 3.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
   glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 }

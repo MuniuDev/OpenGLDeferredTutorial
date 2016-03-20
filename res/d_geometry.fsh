@@ -11,20 +11,31 @@ in vec3 v_vertexPos;
 in vec2 v_texCoord;
 in vec3 v_normal;
 
+struct Material
+{
+	float specularIntensity;
+	float specularPower;
+	vec3 specularColor;
+};
+
 layout (location = 0) out vec3 vertexPosOut;
 layout (location = 1) out vec3 diffuseOut;
 layout (location = 2) out vec3 normalOut;
-layout (location = 3) out vec3 texCoordOut;
+layout (location = 3) out vec3 specularColorOut;
+layout (location = 4) out vec2 specularDataOut;
 
 out vec4 frag_color;
 
 uniform sampler2D gSampler;
 uniform mat4 u_transform;
+uniform Material u_material;
+
 
 void main()
 {
 	vertexPosOut = vec3(u_transform * vec4(v_vertexPos, 1));
 	diffuseOut = texture(gSampler, v_texCoord).xyz;	
 	normalOut = normalize(transpose(inverse(mat3(u_transform))) * v_normal);
-	texCoordOut = vec3(v_texCoord, 0.0);
+	specularColorOut = u_material.specularColor;
+	specularDataOut = vec2(u_material.specularIntensity, u_material.specularPower);
 }

@@ -47,6 +47,8 @@ uniform int u_lightCount;
 uniform sampler2D gPositionMap;
 uniform sampler2D gColorMap;
 uniform sampler2D gNormalMap;
+uniform sampler2D gSpecularColorMap;
+uniform sampler2D gSpecularDataMap;
 
 uniform vec2 gScreenSize;
 
@@ -109,18 +111,22 @@ void main()
    	vec3 normal = normalize(texture(gNormalMap, texCoord).xyz);
 
 	Material mat;
+	mat.specularColor = texture(gSpecularColorMap, texCoord).xyz;
+	vec2 data = texture(gSpecularDataMap, texCoord).xy;
+	mat.specularIntensity = data.x;
+	mat.specularPower = data.y;
 
 	// ambient
 	vec4 ambient = tex_color * ambientlLight(u_ambientLight);
 
 	// directional (diffuse + specular)
 	vec4 directional = tex_color * diffuseLight(u_directionalLight.base, u_directionalLight.direction, normal);
-	//directional += specularLight(u_directionalLight.base, u_directionalLight.direction, normal, worldPos, mat);
+	directional += specularLight(u_directionalLight.base, u_directionalLight.direction, normal, worldPos, mat);
 
 	vec4 point = vec4(0,0,0,0);
 	for(int i=0; i<u_lightCount; ++i) {
 		vec4 tmp = tex_color * diffuseLight(u_pointLights[i].base, normalize(u_pointLights[i].position - worldPos), normal);
-		//tmp += specularLight(u_pointLights[i].base, normalize(u_pointLights[i].position - worldPos), normal, worldPos, mat);
+		tmp += specularLight(u_pointLights[i].base, normalize(u_pointLights[i].position - worldPos), normal, worldPos, mat);
 		point += tmp * pointLightAttenuation(u_pointLights[i], worldPos);
 	}
 
