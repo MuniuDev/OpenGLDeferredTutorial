@@ -49,12 +49,12 @@ void Viewport::InitBigScene() {
   m_bigScene->Init(m_camera);
 
   glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
-  for (int i = 0; i < 5; i++) {
-    for (int j = 0; j < 5; j++) {
+  for (int i = 0; i < 6; i++) {
+    for (int j = 0; j < 4; j++) {
       auto tank = MeshFactory::GetInstance().LoadMesh(GetPath("res/model-tank/"), "tank.fbx");
 
-      pos.x = i * 5;
-      pos.z = j * 8;
+      pos.x = i * 6 - 15;
+      pos.z = j * 10 - 15;
       tank->SetPos(pos);
       m_bigScene->AddMesh(tank);
     }
@@ -66,13 +66,13 @@ void Viewport::InitBigScene() {
     for (int j = 0; j < 3; j++) {
 
       light.base = BaseLight(glm::vec3(GetRandom(), GetRandom(), GetRandom()),
-                             50 + 100 * GetRandom());
+                             50 + 30 * GetRandom());
 
       light.range = 50.0f + 100.0f * GetRandom();
 
-      light.position.x = i * 10 + 3 * GetRandom();
-      light.position.y = 5.0f * GetRandom();
-      light.position.z = j * 10 + 3 * GetRandom();
+      light.position.x = i * 14 + 3 * GetRandom() - 15;
+      light.position.y = 3.0f * (GetRandom() + 0.2f);
+      light.position.z = j * 12 + 3 * GetRandom() - 15;
 
       m_bigScene->AddPointLight(light);
     }
@@ -88,8 +88,8 @@ void Viewport::InitSmallScene() {
 
   m_smallScene->AddMesh(tank);
 
-  m_smallScene->AddPointLight(PointLight(glm::vec3(1, 0, 0), 1, glm::vec3(0, 2, -1), 100, 1));
-  m_smallScene->AddPointLight(PointLight(glm::vec3(0, 1, 0), 1, glm::vec3(0, 2, 1), 100, 1));
+  m_smallScene->AddPointLight(PointLight(glm::vec3(1, 0, 0), 3, glm::vec3(-1, 2, 0), 100, 1));
+  m_smallScene->AddPointLight(PointLight(glm::vec3(0, 1, 0),3, glm::vec3(1, 2, 0), 100, 1));
 }
 
 void Viewport::Draw(float dt) {

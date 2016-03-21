@@ -16,7 +16,7 @@ Scene::Scene()
 
   // basic scene lights
   m_ambientLight = AmbientLight(glm::vec3(1, 1, 1), 0.05f);
-  m_directionalLight = DirectionalLight(glm::vec3(1, 1, 1), 0.7f, glm::normalize(glm::vec3(1, -1, 1)));
+  m_directionalLight = DirectionalLight(glm::vec3(1, 1, 1), 0.5f, glm::normalize(glm::vec3(1, -1, 1)));
 }
 
 Scene::~Scene() {
