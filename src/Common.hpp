@@ -32,6 +32,9 @@
 
 #include <Logger.hpp>
 
+#include <algorithm>
+#include <random>
+
 #include <cstdint>
 #include <cstdlib>
 #include <cmath>
@@ -61,6 +64,18 @@ inline void CheckGLError(const char *file, int line) {
   while ((err = glGetError()) != GL_NO_ERROR) {
     LOGE("{}:{} OpenGL error: [{}] {}", file, line, err, ErrorStr(err));
   }
+}
+
+inline float GetRandom() {
+  return rand() % 1000 / 1000.0f;
+}
+
+inline std::string GetPath(std::string path) {
+#ifdef __WIN32__
+  std::replace(path.begin(), path.end(), '/', '\\');
+#endif // __WIN32__
+
+  return path;
 }
 
 #define CHECK_GL_ERR() CheckGLError(__FILE__, __LINE__ )

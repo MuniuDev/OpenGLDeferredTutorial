@@ -66,8 +66,7 @@ class Quad {
 std::shared_ptr<Quad> quad;
 }
 
-DeferredRenderer::DeferredRenderer(std::shared_ptr<Scene> scene)
-  : Renderer(scene) {
+DeferredRenderer::DeferredRenderer() {
   LOGD("Created deferred renderer");
 
   type = RendererType::DEFERRED;
@@ -118,7 +117,8 @@ DeferredRenderer::~DeferredRenderer() {
 
 }
 
-void DeferredRenderer::InitRenderer(float width, float height) {
+void DeferredRenderer::InitRenderer(std::shared_ptr<Scene> scene, float width, float height) {
+  m_scene = scene;
 
   for (auto &mesh : m_scene->m_meshes)
   { mesh->SetShader(m_geometryShader); }

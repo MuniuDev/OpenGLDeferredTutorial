@@ -25,8 +25,7 @@ std::string ArrayUniformName(const std::string &name, const std::string &field, 
 }
 }
 
-ForwardRenderer::ForwardRenderer(std::shared_ptr<Scene> scene)
-  : Renderer(scene) {
+ForwardRenderer::ForwardRenderer() {
   LOGD("Created forward renderer");
 
   type = RendererType::FORWARD;
@@ -63,7 +62,8 @@ ForwardRenderer::~ForwardRenderer() {
 
 }
 
-void ForwardRenderer::InitRenderer(float, float) {
+void ForwardRenderer::InitRenderer(std::shared_ptr<Scene> scene, float, float) {
+  m_scene = scene;
   for (auto &mesh : m_scene->m_meshes)
   { mesh->SetShader(m_shader); }
 }

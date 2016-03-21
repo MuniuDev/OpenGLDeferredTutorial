@@ -20,11 +20,10 @@ enum class RendererType {
 
 class Renderer {
  public:
-  Renderer(std::shared_ptr<Scene> scene)
-    : m_scene(scene) { }
+  Renderer() { }
   virtual ~Renderer() { }
 
-  virtual void InitRenderer(float, float) = 0;
+  virtual void InitRenderer(std::shared_ptr<Scene> scene, float, float) = 0;
   virtual void RenderScene(float dt) = 0;
   virtual void Resize(float, float) = 0;
 
@@ -41,10 +40,10 @@ class Renderer {
 
 class ForwardRenderer : public Renderer {
  public:
-  ForwardRenderer(std::shared_ptr<Scene> scene);
+  ForwardRenderer();
   ~ForwardRenderer();
 
-  void InitRenderer(float, float);
+  void InitRenderer(std::shared_ptr<Scene> scene, float, float);
   void RenderScene(float dt);
   void Resize(float, float);
 
@@ -54,10 +53,10 @@ class ForwardRenderer : public Renderer {
 
 class DeferredRenderer : public Renderer {
  public:
-  DeferredRenderer(std::shared_ptr<Scene> scene);
+  DeferredRenderer();
   ~DeferredRenderer();
 
-  void InitRenderer(float width, float height);
+  void InitRenderer(std::shared_ptr<Scene> scene, float width, float height);
   void RenderScene(float dt);
 
   void Resize(float width, float height);

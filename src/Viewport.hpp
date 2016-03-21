@@ -28,10 +28,17 @@ class Viewport {
   void SetActiveRenderer(RendererType type);
 
  private:
+  void InitBigScene();
+  void InitSmallScene();
+
   float m_width;
   float m_height;
 
   std::shared_ptr<Scene> m_scene;
+
+  std::shared_ptr<Scene> m_smallScene;
+  std::shared_ptr<Scene> m_bigScene;
+
   std::shared_ptr<Camera> m_camera;
 
   std::shared_ptr<Renderer> m_renderer; //current renderer

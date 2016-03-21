@@ -30,25 +30,94 @@ void Viewport::Resize(float width, float height) {
 void Viewport::Init() {
   m_camera = std::make_shared<Camera>(45.0f, m_width / m_height, 0.1f, 1000.0f);
 
-  m_scene = std::make_shared<Scene>();
-  m_scene->Init(m_camera);
+  InitSmallScene();
+  InitBigScene();
 
-  m_deferredRenderer = std::make_shared<DeferredRenderer>(m_scene);
-  m_forwardRenderer = std::make_shared<ForwardRenderer>(m_scene);
+  m_scene = m_smallScene;
+
+  m_deferredRenderer = std::make_shared<DeferredRenderer>();
+  m_forwardRenderer = std::make_shared<ForwardRenderer>();
 
   m_renderer = m_forwardRenderer;
-  m_renderer->InitRenderer(m_width, m_height);
+  m_renderer->InitRenderer(m_scene, m_width, m_height);
   CHECK_GL_ERR();
+}
+
+void Viewport::InitBigScene() {
+
+  m_bigScene = std::make_shared<Scene>();
+  m_bigScene->Init(m_camera);
+
+  glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
+  for (int i = 0; i < 5; i++) {
+    for (int j = 0; j < 5; j++) {
+      auto tank = MeshFactory::GetInstance().LoadMesh(GetPath("res/model-tank/"), "tank.fbx");
+
+      pos.x = i * 5;
+      pos.z = j * 8;
+      tank->SetPos(pos);
+      m_bigScene->AddMesh(tank);
+    }
+  }
+
+  PointLight light = PointLight(glm::vec3(0, 0, 0), 1, glm::vec3(0, 0, 0), 100, 1);
+
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < 3; j++) {
+
+      light.base = BaseLight(glm::vec3(GetRandom(), GetRandom(), GetRandom()),
+                             50 + 100 * GetRandom());
+
+      light.range = 50.0f + 100.0f * GetRandom();
+
+      light.position.x = i * 10 + 3 * GetRandom();
+      light.position.y = 5.0f * GetRandom();
+      light.position.z = j * 10 + 3 * GetRandom();
+
+      m_bigScene->AddPointLight(light);
+    }
+  }
+}
+
+void Viewport::InitSmallScene() {
+  m_smallScene = std::make_shared<Scene>();
+  m_smallScene->Init(m_camera);
+
+  std::shared_ptr<MeshNode> tank;
+  tank = MeshFactory::GetInstance().LoadMesh(GetPath("res/model-tank/"), "tank.fbx");
+
+  m_smallScene->AddMesh(tank);
+
+  m_smallScene->AddPointLight(PointLight(glm::vec3(1, 0, 0), 1, glm::vec3(0, 2, -1), 100, 1));
+  m_smallScene->AddPointLight(PointLight(glm::vec3(0, 1, 0), 1, glm::vec3(0, 2, 1), 100, 1));
 }
 
 void Viewport::Draw(float dt) {
 
   m_scene->Update(dt);
 
-  if (g_input.GetKeyState(SDL_SCANCODE_F)) {
+  if (g_input.GetKeyState(SDL_SCANCODE_F))
     SetActiveRenderer(RendererType::FORWARD);
-  } else if (g_input.GetKeyState(SDL_SCANCODE_R)) {
+  else if (g_input.GetKeyState(SDL_SCANCODE_R))
     SetActiveRenderer(RendererType::DEFERRED);
+
+
+  static int timer = SDL_GetTicks();
+
+  if (timer < SDL_GetTicks()) {
+    if (g_input.GetKeyState(SDL_SCANCODE_N)) {
+      m_scene = m_smallScene;
+      m_scene->Init(m_camera);
+      m_renderer->InitRenderer(m_scene, m_width, m_height);
+      LOGD("Changed scene to smallScene");
+      timer = SDL_GetTicks() + 500;
+    } else if (g_input.GetKeyState(SDL_SCANCODE_M)) {
+      m_scene = m_bigScene;
+      m_scene->Init(m_camera);
+      m_renderer->InitRenderer(m_scene, m_width, m_height);
+      LOGD("Changed scene to bigScene");
+      timer = SDL_GetTicks() + 500;
+    }
   }
 
   glViewport(0, 0, m_width, m_height);
@@ -72,6 +141,6 @@ void Viewport::SetActiveRenderer(RendererType type) {
         break;
     }
 
-    m_renderer->InitRenderer(m_width, m_height);
+    m_renderer->InitRenderer(m_scene, m_width, m_height);
   }
 }

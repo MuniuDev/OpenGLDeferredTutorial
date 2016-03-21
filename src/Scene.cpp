@@ -12,21 +12,11 @@
 Scene::Scene()
   : m_camera(nullptr) {
 
-#ifdef __WIN32__
-  m_meshes.push_back(MeshFactory::GetInstance().LoadMesh("res\\model-tank\\", "tank.fbx"));
-  m_meshes.push_back(MeshFactory::GetInstance().LoadMesh("res\\model-ground\\", "ground.fbx"));
-#else
-  m_meshes.push_back(MeshFactory::GetInstance().LoadMesh("res/model-tank/", "tank.fbx"));
-  m_meshes.push_back(MeshFactory::GetInstance().LoadMesh("res/model-ground/", "ground.fbx"));
-#endif
+  m_meshes.push_back(MeshFactory::GetInstance().LoadMesh(GetPath("res/model-ground/"), "ground.fbx"));
 
   // basic scene lights
   m_ambientLight = AmbientLight(glm::vec3(1, 1, 1), 0.05f);
   m_directionalLight = DirectionalLight(glm::vec3(1, 1, 1), 0.7f, glm::normalize(glm::vec3(1, -1, 1)));
-
-  // some test point lights
-  m_pointLights.push_back(PointLight(glm::vec3(1, 0, 0), 1, glm::vec3(0, 2, -1), 100, 1));
-  m_pointLights.push_back(PointLight(glm::vec3(0, 1, 0), 1, glm::vec3(0, 2, 1), 100, 1));
 }
 
 Scene::~Scene() {
@@ -47,4 +37,12 @@ void Scene::Update(float dt) {
 
 std::shared_ptr<Camera> Scene::GetCamera() {
   return m_camera;
+}
+
+void Scene::AddMesh(std::shared_ptr<MeshNode> mesh) {
+  m_meshes.push_back(mesh);
+}
+
+void Scene::AddPointLight(PointLight light) {
+  m_pointLights.push_back(light);
 }
