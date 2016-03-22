@@ -37,7 +37,7 @@ struct Material {
 out vec4 frag_color;
 
 uniform vec3 u_eyePos;
-uniform vec2 gScreenSize;
+uniform vec2 u_screenSize;
 
 // lights
 uniform BaseLight u_ambientLight;
@@ -109,7 +109,7 @@ float pointLightAttenuation(PointLight light, vec3 vertexPos) {
 void main()
 {
    	// get data from textures
-	vec2 texCoord = gl_FragCoord.xy / gScreenSize;
+	vec2 texCoord = gl_FragCoord.xy / u_screenSize;
     vec3 worldPos = texture(gPositionMap, texCoord).xyz;
    	vec4 tex_color = vec4(texture(gColorMap, texCoord).xyz, 0);
    	vec3 normal = normalize(texture(gNormalMap, texCoord).xyz);

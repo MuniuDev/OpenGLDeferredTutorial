@@ -33,7 +33,7 @@ DeferredRenderer::DeferredRenderer() {
   m_lightShader->BindProgram();
   m_lightShader->RegisterUniform("u_mvp");
   m_lightShader->RegisterUniform("u_transform");
-  m_lightShader->RegisterUniform("gScreenSize");
+  m_lightShader->RegisterUniform("u_screenSize");
 
   m_lightShader->RegisterUniform("gPositionMap");
   m_lightShader->RegisterUniform("gColorMap");
@@ -80,6 +80,7 @@ void DeferredRenderer::InitRenderer(std::shared_ptr<Scene> scene, float width, f
   int lightCount = glm::min((int)m_scene->m_pointLights.size(), MAX_POINT_LIGHT);
 
   m_lightShader->SetUniform("u_lightCount", lightCount);
+  m_lightShader->SetUniform("u_screenSize", glm::vec2(m_width, m_height));
 
   for (int i = 0; i < lightCount; ++i) {
     PointLight light = m_scene->m_pointLights[i];
@@ -90,7 +91,6 @@ void DeferredRenderer::InitRenderer(std::shared_ptr<Scene> scene, float width, f
     m_lightShader->SetUniform(ArrayUniformName("u_pointLights", "attenuation", i), light.attenuation);
   }
 
-  m_lightShader->SetUniform("gScreenSize", glm::vec2(m_width, m_height));
   m_lightShader->SetUniform("gPositionMap", (int) GBuffer::GBUFFER_TEXTURE_TYPE_POSITION);
   m_lightShader->SetUniform("gColorMap", (int) GBuffer::GBUFFER_TEXTURE_TYPE_DIFFUSE);
   m_lightShader->SetUniform("gNormalMap", (int) GBuffer::GBUFFER_TEXTURE_TYPE_NORMAL);
@@ -163,7 +163,7 @@ void DeferredRenderer::Resize(float width, float height) {
   m_height = height;
 
   m_lightShader->BindProgram();
-  m_lightShader->SetUniform("gScreenSize", glm::vec2(m_width, m_height));
+  m_lightShader->SetUniform("u_screenSize", glm::vec2(m_width, m_height));
 
   ResetBuffers();
 }
