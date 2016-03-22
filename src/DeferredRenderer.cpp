@@ -9,56 +9,16 @@
 #include <Renderer.hpp>
 #include <Input.hpp>
 
+
 #define MAX_POINT_LIGHT 10
-
-namespace {
-class Quad {
- public:
-  Quad() {
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    glGenBuffers(1, &vbo);
-
-    GLfloat vertices[] = {
-      1.0f, 1.0f, 0.0f,
-      -1.0f, 1.0f, 0.0f,
-      1.0f, -1.0f, 0.0f,
-
-      -1.0f, -1.0f, 0.0f,
-      1.0f, -1.0f, 0.0f,
-      -1.0f, 1.0f, 0.0f,
-    };
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glBindVertexArray(0);
-  }
-
-  ~Quad() {
-    glDeleteBuffers(1, &vbo);
-    glDeleteVertexArrays(1, &vao);
-  }
-  void Render() {
-    glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-    glBindVertexArray(0);
-  }
- private:
-  GLuint vao, vbo;
-};
-
-std::shared_ptr<Quad> quad;
-}
 
 DeferredRenderer::DeferredRenderer() {
   LOGD("Created deferred renderer");
 
   type = RendererType::DEFERRED;
   CHECK_GL_ERR();
+
+  quad = std::make_shared<Quad>();
 
   m_geometryShader = std::make_shared<ShaderProgram>("res/d_geometry.vsh", "res/d_geometry.fsh");
   m_geometryShader->BindProgram();
@@ -147,10 +107,6 @@ void DeferredRenderer::InitRenderer(std::shared_ptr<Scene> scene, float width, f
   m_lightShader->SetUniform("u_mvp", glm::mat4(1.0f));
   m_lightShader->SetUniform("u_transform", glm::mat4(1.0f));
 
-  m_lightShader->SetUniform("u_eyePos", m_scene->GetCamera()->GetPos());
-
-  LOGD("init!");
-
   ResetBuffers();
   CHECK_GL_ERR();
 }
@@ -193,8 +149,9 @@ void DeferredRenderer::LightPass(float dt) {
 
   m_lightShader->BindProgram();
 
+  m_lightShader->SetUniform("u_eyePos", m_scene->GetCamera()->GetPos());
+
   //in future, should be replaced by proper multipass light rendering
-  if (!quad) { quad = std::make_shared<Quad>(); }
   quad->Render();
 
   //deinit

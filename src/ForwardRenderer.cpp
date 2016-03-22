@@ -51,15 +51,7 @@ ForwardRenderer::~ForwardRenderer() {
 void ForwardRenderer::InitRenderer(std::shared_ptr<Scene> scene, float, float) {
   m_scene = scene;
   for (auto &mesh : m_scene->m_meshes)
-  { mesh->SetShader(m_shader); }
-}
-
-void ForwardRenderer::RenderScene(float dt) {
-  // FB initialization
-  glDepthMask(GL_TRUE);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glClearColor(0, 0, 0, 0);
-  glEnable(GL_DEPTH_TEST);
+    mesh->SetShader(m_shader);
 
   m_shader->BindProgram();
 
@@ -70,9 +62,8 @@ void ForwardRenderer::RenderScene(float dt) {
   m_shader->SetUniform("u_directionalLight.base.intensity", m_scene->m_directionalLight.base.intensity);
   m_shader->SetUniform("u_directionalLight.direction", m_scene->m_directionalLight.direction);
 
-  m_shader->SetUniform("u_eyePos", m_scene->GetCamera()->GetPos());
 
-  m_shader->SetUniform("u_mvp", m_scene->GetCamera()->GetMVP());
+
 
   int lightCount = glm::min((int)m_scene->m_pointLights.size(), MAX_POINT_LIGHT);
 
@@ -86,6 +77,21 @@ void ForwardRenderer::RenderScene(float dt) {
     m_shader->SetUniform(ArrayUniformName("u_pointLights", "range", i), light.range);
     m_shader->SetUniform(ArrayUniformName("u_pointLights", "attenuation", i), light.attenuation);
   }
+
+}
+
+void ForwardRenderer::RenderScene(float dt) {
+  // FB initialization
+  glDepthMask(GL_TRUE);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClearColor(0, 0, 0, 0);
+  glEnable(GL_DEPTH_TEST);
+
+  m_shader->BindProgram();
+
+  m_shader->SetUniform("u_eyePos", m_scene->GetCamera()->GetPos());
+  m_shader->SetUniform("u_mvp", m_scene->GetCamera()->GetMVP());
+
 
   for (auto &mesh : m_scene->m_meshes)
   { mesh->Draw(dt); }

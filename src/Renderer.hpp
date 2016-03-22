@@ -11,6 +11,7 @@
 #include <Common.hpp>
 #include <Scene.hpp>
 #include <GBuffer.hpp>
+#include <Quad.hpp>
 
 
 enum class RendererType {
@@ -69,6 +70,8 @@ class DeferredRenderer : public Renderer {
   std::shared_ptr<GBuffer> m_gbuffer;
   float m_width;
   float m_height;
+
+  std::shared_ptr<Quad> quad;
 
   void ResetBuffers();
 
