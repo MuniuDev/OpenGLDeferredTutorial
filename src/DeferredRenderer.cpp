@@ -117,7 +117,7 @@ void DeferredRenderer::RenderScene(float dt) {
 
   // if 'v' is pressed, draw the G-buffer
   if (g_input.GetKeyState(SDL_SCANCODE_V))
-    m_gbuffer->DebugDraw(m_width, m_height);
+    m_gbuffer->DebugDraw((GLint)m_width, (GLint)m_height);
 }
 
 void DeferredRenderer::GeometryPass(float dt) {
@@ -172,5 +172,5 @@ void DeferredRenderer::ResetBuffers() {
   m_gbuffer.reset();
 
   m_gbuffer = std::make_shared<GBuffer>();
-  m_gbuffer->Init(m_width, m_height);
+  m_gbuffer->Init((unsigned int)m_width, (unsigned int)m_height);
 }

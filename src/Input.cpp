@@ -29,7 +29,7 @@ void Input::Update() {
 }
 
 bool Input::GetKeyState(int keycode) {
-  return m_keystate[keycode];
+  return m_keystate[keycode] != 0;
 }
 
 glm::vec2 Input::GetMousePosition() {

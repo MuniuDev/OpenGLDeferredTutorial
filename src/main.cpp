@@ -11,7 +11,7 @@
 #include <WindowEventHandler.hpp>
 
 int main() {
-  srand(time(NULL));
+  srand((unsigned int)time(NULL));
 
   auto context = std::make_shared<Context>(800, 600, "OpenGLDemo");
   auto eventHandler = std::make_shared<WindowEventHandler>(context);

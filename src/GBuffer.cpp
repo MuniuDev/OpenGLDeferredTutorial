@@ -103,24 +103,24 @@ void GBuffer::SetReadBuffer(GBUFFER_TEXTURE_TYPE textureType) {
   glReadBuffer(GL_COLOR_ATTACHMENT0 + textureType);
 }
 
-void GBuffer::DebugDraw(float width, float height) {
+void GBuffer::DebugDraw(GLint width, GLint height) {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);
 
   SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_POSITION);
-  glBlitFramebuffer(0, 0, width, height, 0, height * 1.0f / 3.0f, width / 2.0f, height * 2.0f / 3.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+  glBlitFramebuffer(0, 0, width, height, 0, height / 3, width / 2, (height * 2) / 3, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
   SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_DIFFUSE);
-  glBlitFramebuffer(0, 0, width, height, 0, height * 2.0f / 3.0f, width / 2.0f, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+  glBlitFramebuffer(0, 0, width, height, 0, (height * 2) / 3, width / 2, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
   SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_NORMAL);
-  glBlitFramebuffer(0, 0, width, height, width / 2.0f, height * 2.0f / 3.0f, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+  glBlitFramebuffer(0, 0, width, height, width / 2, (height * 2) / 3, width, height, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
   SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_SPECULAR_DATA);
-  glBlitFramebuffer(0, 0, width, height, 0, 0, width / 2.0f, height * 1.0f / 3.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+  glBlitFramebuffer(0, 0, width, height, 0, 0, width / 2, height / 3, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
   SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_SPECULAR_COLOR);
-  glBlitFramebuffer(0, 0, width, height, width / 2.0f, height * 1.0f / 3.0f, width, height * 2.0f / 3.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+  glBlitFramebuffer(0, 0, width, height, width / 2, height / 3, width, (height * 2) / 3, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
   // this is some place left for the last texture
   //glBlitFramebuffer(0, 0, width, height, width / 2.0f, 0, width, height * 1.0f / 3.0f, GL_COLOR_BUFFER_BIT, GL_LINEAR);

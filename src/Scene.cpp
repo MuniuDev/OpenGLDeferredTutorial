@@ -27,8 +27,8 @@ void Scene::Init(std::shared_ptr<Camera> camera) {
 
   m_camera = camera;
 
-  m_camera->SetPos(glm::vec3(-8.04383, 4.87507, -6.82812));
-  m_camera->SetRotate(glm::quat(-0.48016, 0.0973405, 0.854395, 0.173216));
+  m_camera->SetPos(glm::vec3(-8.04383f, 4.87507f, -6.82812f));
+  m_camera->SetRotate(glm::quat(-0.48016f, 0.0973405f, 0.854395f, 0.173216f));
 }
 
 void Scene::Update(float dt) {

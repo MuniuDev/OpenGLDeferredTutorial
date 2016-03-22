@@ -29,7 +29,7 @@ Context::Context(float width, float height, std::string name)
   //Create window
   m_window = SDL_CreateWindow(name.c_str(),
                               SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                              m_width, m_height,
+                              (int)m_width, (int)m_height,
                               SDL_WINDOW_OPENGL |
                               SDL_WINDOW_SHOWN |
                               SDL_WINDOW_RESIZABLE);
@@ -93,8 +93,8 @@ void Context::InitGL() {
 void Context::HandleWindowEvent(const SDL_Event &event) {
   switch (event.window.event) {
     case SDL_WINDOWEVENT_RESIZED:
-      m_width = event.window.data1;
-      m_height = event.window.data2;
+      m_width = (float)event.window.data1;
+      m_height = (float)event.window.data2;
       m_viewport.Resize(m_width, m_height);
       break;
     default:

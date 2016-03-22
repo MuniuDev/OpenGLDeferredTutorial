@@ -33,7 +33,7 @@ class GBuffer {
 
   void SetReadBuffer(GBUFFER_TEXTURE_TYPE textureType);
 
-  void DebugDraw(float width, float height);
+  void DebugDraw(GLint width, GLint height);
 
  private:
 

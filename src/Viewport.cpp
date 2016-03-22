@@ -53,8 +53,8 @@ void Viewport::InitBigScene() {
     for (int j = 0; j < 4; j++) {
       auto tank = MeshFactory::GetInstance().LoadMesh(GetPath("res/model-tank/"), "tank.fbx");
 
-      pos.x = i * 6 - 15;
-      pos.z = j * 10 - 15;
+      pos.x = (float)i * 6 - 15;
+      pos.z = (float)j * 10 - 15;
       tank->SetPos(pos);
       m_bigScene->AddMesh(tank);
     }
@@ -120,7 +120,7 @@ void Viewport::Draw(float dt) {
     }
   }
 
-  glViewport(0, 0, m_width, m_height);
+  glViewport(0, 0, (GLsizei)m_width, (GLsizei)m_height);
 
   m_renderer->RenderScene(dt);
 }
