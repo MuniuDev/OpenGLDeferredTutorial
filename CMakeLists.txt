@@ -44,7 +44,7 @@ endif()
 # Windows workarounds
 if( WIN32 )
   # location of master lib folder
-  set( WIN_LIB_DIR "C:/libs" )
+  set( WIN_LIB_DIR "${CMAKE_SOURCE_DIR}/libs/windows" )
   # lib locations
   set( CMAKE_PREFIX_PATH "${WIN_LIB_DIR}/glew")
   set( GLM_ROOT_DIR "${WIN_LIB_DIR}/glm")
