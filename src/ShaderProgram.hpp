@@ -10,11 +10,7 @@
 
 #include <Common.hpp>
 
-#include <string>
-#include <map>
-
-// Text for fonts:
-// http://nehe.gamedev.net/tutorial/freetype_fonts_in_opengl/24001/
+std::string ArrayUniformName(const std::string &name, const std::string &field, int idx);
 
 class ShaderProgram {
  public:

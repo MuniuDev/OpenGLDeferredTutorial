@@ -34,7 +34,7 @@ class Viewport {
   float m_width;
   float m_height;
 
-  std::shared_ptr<Scene> m_scene;
+  std::shared_ptr<Scene> m_scene; //current scene
 
   std::shared_ptr<Scene> m_smallScene;
   std::shared_ptr<Scene> m_bigScene;

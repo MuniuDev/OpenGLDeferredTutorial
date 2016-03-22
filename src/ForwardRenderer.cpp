@@ -8,22 +8,8 @@
 
 #include <Renderer.hpp>
 
-#include <sstream>
-#include <cmath>
-
 #define MAX_POINT_LIGHT 10
 
-namespace {
-std::string ArrayUniformName(const std::string &name, const std::string &field, int idx) {
-  std::stringstream ss("");
-  ss << name;
-  ss << "[";
-  ss << idx;
-  ss << "].";
-  ss << field;
-  return ss.str();
-}
-}
 
 ForwardRenderer::ForwardRenderer() {
   LOGD("Created forward renderer");

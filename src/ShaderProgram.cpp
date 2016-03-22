@@ -11,6 +11,15 @@
 #include <fstream>
 #include <vector>
 
+std::string ArrayUniformName(const std::string &name, const std::string &field, int idx) {
+  std::stringstream ss("");
+  ss << name;
+  ss << "[";
+  ss << idx;
+  ss << "].";
+  ss << field;
+  return ss.str();
+}
 
 ShaderProgram::ShaderProgram(const std::string &vertexShader,
                              const std::string &fragmentShader) {

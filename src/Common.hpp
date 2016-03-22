@@ -32,8 +32,10 @@
 
 #include <Logger.hpp>
 
+#include <sstream>
 #include <algorithm>
 #include <random>
+#include <map>
 
 #include <cstdint>
 #include <cstdlib>
