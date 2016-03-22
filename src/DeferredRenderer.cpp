@@ -138,7 +138,7 @@ void DeferredRenderer::GeometryPass(float dt) {
   glDisable(GL_DEPTH_TEST);
 }
 
-void DeferredRenderer::LightPass(float dt) {
+void DeferredRenderer::LightPass(float) {
   glEnable(GL_BLEND);
   glBlendEquation(GL_FUNC_ADD);
   glBlendFunc(GL_ONE, GL_ONE);

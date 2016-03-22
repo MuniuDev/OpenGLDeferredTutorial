@@ -33,7 +33,7 @@ bool GBuffer::Init(unsigned int width, unsigned int height) {
   glGenFramebuffers(1, &m_fbo);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
 
-  int objSize = sizeof(m_textures) / sizeof(m_textures[0]);
+  unsigned int objSize = sizeof(m_textures) / sizeof(m_textures[0]);
 
   glGenTextures(objSize, m_textures);
   glGenTextures(1, &m_depthTexture);
@@ -91,7 +91,7 @@ void GBuffer::BindForWriting() {
 
 void GBuffer::BindForReading() {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-  int objSize = sizeof(m_textures) / sizeof(m_textures[0]);
+  unsigned int objSize = sizeof(m_textures) / sizeof(m_textures[0]);
   for (unsigned int i = 0; i < objSize; i++) {
     glActiveTexture(GL_TEXTURE0 + i);
     glBindTexture(GL_TEXTURE_2D, m_textures[GBUFFER_TEXTURE_TYPE_POSITION + i]);

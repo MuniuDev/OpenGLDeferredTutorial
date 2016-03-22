@@ -27,11 +27,12 @@ class Context {
   void Draw();
   void SwapBuffers();
 
+  // Viewports
+  Viewport m_viewport;
+
   float m_width;
   float m_height;
 
-  // Viewports
-  Viewport m_viewport;
   FPSCounter m_fpsCounter;
 
   //SDL

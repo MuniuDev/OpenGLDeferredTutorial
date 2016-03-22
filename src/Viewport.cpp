@@ -102,7 +102,7 @@ void Viewport::Draw(float dt) {
     SetActiveRenderer(RendererType::DEFERRED);
 
 
-  static int timer = SDL_GetTicks();
+  static unsigned int timer = SDL_GetTicks();
 
   if (timer < SDL_GetTicks()) {
     if (g_input.GetKeyState(SDL_SCANCODE_N)) {

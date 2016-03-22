@@ -31,7 +31,7 @@ enum LogLevel {
  *  @param[in] fmt Format string.
  */
 inline void sprint(std::ostream &stream,
-                   LogLevel level,
+                   LogLevel,
                    const std::string &fmt) {
   stream << fmt << std::endl;
 }

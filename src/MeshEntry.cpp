@@ -35,7 +35,7 @@ MeshData::MeshEntry::MeshEntry(const std::string &path,
 
   if (mesh->HasPositions()) {
     auto vertices = std::vector<float>(mesh->mNumVertices * 3, 0);
-    for (int i = 0; i < mesh->mNumVertices; ++i) {
+    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
       vertices[i * 3] = mesh->mVertices[i].x;
       vertices[i * 3 + 1] = mesh->mVertices[i].y;
       vertices[i * 3 + 2] = mesh->mVertices[i].z;
@@ -53,7 +53,7 @@ MeshData::MeshEntry::MeshEntry(const std::string &path,
 
   if (mesh->HasTextureCoords(0)) {
     auto texCoords = std::vector<float>(mesh->mNumVertices * 2, 0);
-    for (int i = 0; i < mesh->mNumVertices; ++i) {
+    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
       texCoords[i * 2] = mesh->mTextureCoords[0][i].x;
       texCoords[i * 2 + 1] = mesh->mTextureCoords[0][i].y;
     }
@@ -70,7 +70,7 @@ MeshData::MeshEntry::MeshEntry(const std::string &path,
 
   if (mesh->HasNormals()) {
     auto normals = std::vector<float>(mesh->mNumVertices * 3, 0);
-    for (int i = 0; i < mesh->mNumVertices; ++i) {
+    for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
       normals[i * 3] = mesh->mNormals[i].x;
       normals[i * 3 + 1] = mesh->mNormals[i].y;
       normals[i * 3 + 2] = mesh->mNormals[i].z;
@@ -88,7 +88,7 @@ MeshData::MeshEntry::MeshEntry(const std::string &path,
 
   if (mesh->HasFaces()) {
     auto indices = std::vector<unsigned int>(mesh->mNumFaces * 3, 0);
-    for (int i = 0; i < mesh->mNumFaces; ++i) {
+    for (unsigned int i = 0; i < mesh->mNumFaces; ++i) {
       indices[i * 3] = mesh->mFaces[i].mIndices[0];
       indices[i * 3 + 1] = mesh->mFaces[i].mIndices[1];
       indices[i * 3 + 2] = mesh->mFaces[i].mIndices[2];
@@ -166,7 +166,7 @@ MeshData::MeshEntry::~MeshEntry() {
   glDeleteVertexArrays(1, &vao);
 }
 
-void MeshData::MeshEntry::Draw(float dt) {
+void MeshData::MeshEntry::Draw(float) {
   glBindVertexArray(vao);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, texID);
