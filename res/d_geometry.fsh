@@ -7,16 +7,21 @@
 
 #version 330 core
 
-in vec3 v_vertexPos;
-in vec2 v_texCoord;
-in vec3 v_normal;
+/* Structures */
 
-struct Material
-{
+struct Material {
 	float specularIntensity;
 	float specularPower;
 	vec3 specularColor;
 };
+
+/* Params */
+
+out vec4 frag_color;
+
+in vec3 v_vertexPos;
+in vec2 v_texCoord;
+in vec3 v_normal;
 
 layout (location = 0) out vec3 vertexPosOut;
 layout (location = 1) out vec3 diffuseOut;
@@ -24,18 +29,17 @@ layout (location = 2) out vec3 normalOut;
 layout (location = 3) out vec3 specularColorOut;
 layout (location = 4) out vec2 specularDataOut;
 
-out vec4 frag_color;
-
-uniform sampler2D gSampler;
-uniform mat4 u_transform;
 uniform Material u_material;
+uniform sampler2D gSampler;
 
+/* Functions */
 
 void main()
 {
-	vertexPosOut = vec3(u_transform * vec4(v_vertexPos, 1));
+	// pass data to different rendering targets
+	vertexPosOut = v_vertexPos;
 	diffuseOut = texture(gSampler, v_texCoord).xyz;	
-	normalOut = normalize(transpose(inverse(mat3(u_transform))) * v_normal);
+	normalOut = v_normal;
 	specularColorOut = u_material.specularColor;
 	specularDataOut = vec2(u_material.specularIntensity, u_material.specularPower);
 }

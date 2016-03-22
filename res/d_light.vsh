@@ -13,5 +13,6 @@ uniform mat4 u_transform;
 
 void main()
 {
+  // calc position of the vertex in global coordinates
   gl_Position = u_mvp * u_transform * vec4(a_pos, 1);
 }

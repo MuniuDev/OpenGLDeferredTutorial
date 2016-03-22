@@ -19,9 +19,11 @@ uniform mat4 u_transform;
 
 void main()
 {
-  v_vertexPos = a_vertexPos;
+  // pass varying variables to fragment shader, in global coordinates
+  v_vertexPos = vec3(u_transform * vec4(a_vertexPos, 1));
   v_texCoord = a_texCoord;
-  v_normal = a_normal;
+  v_normal = normalize(transpose(inverse(mat3(u_transform))) * a_normal);
 
+  // calc position of the vertex in global coordinates
   gl_Position = u_mvp * u_transform * vec4(a_vertexPos, 1);
 }
