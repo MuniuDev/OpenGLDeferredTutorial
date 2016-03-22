@@ -15,8 +15,8 @@
 
 #include <vector>
 
-class aiMesh;
-class aiMaterial;
+struct aiMesh;
+struct aiMaterial;
 
 class MeshData {
  public:
