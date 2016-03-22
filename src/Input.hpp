@@ -26,7 +26,6 @@ class Input {
   glm::vec2 m_mousePos;
   glm::vec2 m_prevMousePos;
   bool m_lmbPressed;
-
 };
 
 extern Input g_input;

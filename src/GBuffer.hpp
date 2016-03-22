@@ -29,7 +29,6 @@ class GBuffer {
   bool Init(unsigned int width, unsigned int height);
 
   void BindForWriting();
-
   void BindForReading();
 
   void SetReadBuffer(GBUFFER_TEXTURE_TYPE textureType);

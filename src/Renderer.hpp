@@ -66,16 +66,14 @@ class DeferredRenderer : public Renderer {
   void GeometryPass(float dt);
   void LightPass(float dt);
 
- protected:
-  std::shared_ptr<GBuffer> m_gbuffer;
-  float m_width;
-  float m_height;
-
-  std::shared_ptr<Quad> quad;
-
   void ResetBuffers();
 
- private:
+  std::shared_ptr<GBuffer> m_gbuffer;
+  std::shared_ptr<Quad> quad;
+
+  float m_height;
+  float m_width;
+
   std::shared_ptr<ShaderProgram> m_geometryShader;
   std::shared_ptr<ShaderProgram> m_lightShader;
 };

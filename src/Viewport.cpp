@@ -89,7 +89,7 @@ void Viewport::InitSmallScene() {
   m_smallScene->AddMesh(tank);
 
   m_smallScene->AddPointLight(PointLight(glm::vec3(1, 0, 0), 3, glm::vec3(-1, 2, 0), 100, 1));
-  m_smallScene->AddPointLight(PointLight(glm::vec3(0, 1, 0),3, glm::vec3(1, 2, 0), 100, 1));
+  m_smallScene->AddPointLight(PointLight(glm::vec3(0, 1, 0), 3, glm::vec3(1, 2, 0), 100, 1));
 }
 
 void Viewport::Draw(float dt) {

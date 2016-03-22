@@ -40,7 +40,7 @@ bool GBuffer::Init(unsigned int width, unsigned int height) {
 
   for (unsigned int i = 0 ; i < objSize ; i++) {
     glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-    //TODO request this to be optimized on the workshop
+
     if (i == GBUFFER_TEXTURE_TYPE_SPECULAR_DATA) {
       // specular data requires only 2 16-bit floats
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, width, height, 0, GL_RG, GL_FLOAT, NULL);
