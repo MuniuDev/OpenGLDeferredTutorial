@@ -39,28 +39,10 @@ bool GBuffer::Init(unsigned int width, unsigned int height) {
   glGenTextures(1, &m_depthTexture);
 
   for (unsigned int i = 0 ; i < objSize ; i++) {
-    glBindTexture(GL_TEXTURE_2D, m_textures[i]);
-
-    if (i == GBUFFER_TEXTURE_TYPE_SPECULAR_DATA) {
-      // specular data requires only 2 16-bit floats
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, width, height, 0, GL_RG, GL_FLOAT, NULL);
-    } else if (i == GBUFFER_TEXTURE_TYPE_DIFFUSE || i == GBUFFER_TEXTURE_TYPE_SPECULAR_COLOR) {
-      // color components are always positive and thus can be placed in GL_R11F_G11F_B10F
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_R11F_G11F_B10F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
-    } else {
-      // rest of the data has to be in 3 16-bit floats
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, NULL);
-    }
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, m_textures[i], 0);
+    //TODO create framebuffer textures for every rendering target needed
   }
 
-  // depth
-  glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT,
-               NULL);
-  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_depthTexture, 0);
+  //TODO create framebuffer textures for depth buffer (z-buffer)
 
   GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
   glDrawBuffers(sizeof(drawBuffers) / sizeof(drawBuffers[0]), drawBuffers);
@@ -76,6 +58,7 @@ bool GBuffer::Init(unsigned int width, unsigned int height) {
       default: text = "NO DESCRIPTION"; break;
     }
     LOGE("FrameBuffer error, status: [{}] {}", status, text);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
     return false;
   }
 
@@ -86,17 +69,11 @@ bool GBuffer::Init(unsigned int width, unsigned int height) {
 }
 
 void GBuffer::BindForWriting() {
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
+  //TODO geometry pass implementation
 }
 
 void GBuffer::BindForReading() {
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-  unsigned int objSize = sizeof(m_textures) / sizeof(m_textures[0]);
-  for (unsigned int i = 0; i < objSize; i++) {
-    glActiveTexture(GL_TEXTURE0 + i);
-    glBindTexture(GL_TEXTURE_2D, m_textures[GBUFFER_TEXTURE_TYPE_POSITION + i]);
-  }
-  glActiveTexture(GL_TEXTURE0);
+  //TODO bind for reading
 }
 
 void GBuffer::SetReadBuffer(GBUFFER_TEXTURE_TYPE textureType) {
